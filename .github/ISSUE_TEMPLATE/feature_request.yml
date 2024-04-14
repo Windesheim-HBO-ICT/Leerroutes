@@ -1,21 +1,22 @@
 name: Feature Request
-description: Verzoek een nieuwe toevoeging.
-labels: ["feature"]
+description: Request a new addition
+labels:
+  - feature
 
 body:
-- type: markdown
-  attributes:
-    value: >
-      #### Bedankt voor het bijdragen! Voordat je een feature request maakt, zorg ervoor dat deze niet al bestaat [Huidige en vorige issues](https://github.com/Windesheim-HBO-ICT/Curriculum/issues?page=1&q=is%3Aissue+sort%3Acreated-desc)
-- type: textarea
-  attributes:
-    label: Beschrijving
-    description: |
-      Beschrijf de feature in zo veel mogelijk detail. Zorg ervoor dat iedereen begrijpt wat je bedoelt.
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: Context
-    description: |
-      Hier kun je overige context, zoals pseudo code, links, diagrammen en schermontwerpen toevoegen.
+  - type: markdown
+    attributes:
+      value: >
+        #### Thank you for contributing! Before submitting a feature request, please make sure it does not already exist [Current and previous issues](https://github.com/Windesheim-HBO-ICT/Curriculum/issues?page=1&q=is%3Aissue+sort%3Acreated-desc)
+  - type: textarea
+    attributes:
+      label: Description
+      description: |
+        Describe the feature in as much detail as possible. Make sure everyone understands what you mean.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Context
+      description: |
+        Here you can add additional context, such as pseudo code, links, diagrams, and screen designs.
