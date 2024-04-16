@@ -1,0 +1,22 @@
+name: Feature Request
+description: Request a new addition
+labels:
+  - feature
+
+body:
+  - type: markdown
+    attributes:
+      value: >
+        #### Thank you for contributing! Before submitting a feature request, please make sure it does not already exist [Current and previous issues](https://github.com/Windesheim-HBO-ICT/Curriculum/issues?page=1&q=is%3Aissue+sort%3Acreated-desc)
+  - type: textarea
+    attributes:
+      label: Description
+      description: |
+        Describe the feature in as much detail as possible. Make sure everyone understands what you mean.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Context
+      description: |
+        Here you can add additional context, such as pseudo code, links, diagrams, and screen designs.
