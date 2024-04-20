@@ -1,3 +1,4 @@
-import TestComponent from './components/TestComponent';
+import LeerrouteItem from "./components/LeerrouteItem";
+import LeerrouteWorkspace from "./components/LeerrouteWorkspace";
 
-export { TestComponent };
+export {LeerrouteWorkspace, LeerrouteItem };
