@@ -22,7 +22,7 @@ Om Leerroutes op zo veel mogelijke plaatsen beschikbaar te maken zal het ontwikk
 ### Functies
 Het zal op termijn mogelijk zijn om de leerroutes te bekijken met behulp van metrolijnen zoals in deze afbeelding met:
 
-(afbeelding hier)
+![Leerroutes concept](https://github.com/Labhatorian/Leerroutes/assets/16213031/3e5c08df-3096-4783-ab67-3a85d372f25f)
 
 Hiervoor zal [d3-force](https://d3js.org/d3-force#d3-force) gebruikt worden van [d3](https://d3js.org/) om dit te realiseren.
 
