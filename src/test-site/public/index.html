@@ -23,26 +23,148 @@
     <script>
         const leerrouteWorkspace = document.getElementById('leerrouteWorkspace');
 
+        //TODO: Simplify
         const leerrouteItems = [
+            //Propedeuse
             {
-                id: 'node1',
-                group: 'group1',
+                id: 'P',
+                group: 'propedeuse',
                 links: [
-                    { source: 'node1', target: 'node2', value: 10 },
+                    { source: 'P', target: 'HCI', value: 10 },
+                    { source: 'P', target: 'BPM', value: 10 },
+                    { source: 'P', target: 'OOSDD', value: 10 },
+                    { source: 'P', target: 'MC', value: 10 },
+                ]
+            },
+
+            //Tweede rang
+            {
+                id: 'HCI',
+                group: 'group',
+                links: [
+                    { source: 'HCI', target: 'CAA', value: 10 },
+                    { source: 'HCI', target: 'DS', value: 10 },
                 ]
             },
             {
-                id: 'node2',
-                group: 'group2',
+                id: 'BPM',
+                group: 'group',
                 links: [
-                    { source: 'node2', target: 'node3', value: 20 },
+                    { source: 'BPM', target: 'CAA', value: 10 },
+                    { source: 'BPM', target: 'DS', value: 10 },
+                    { source: 'BPM', target: 'UI', value: 10 },
                 ]
             },
             {
-                id: 'node3',
-                group: 'group1',
+                id: 'OOSDD',
+                group: 'group',
                 links: [
-                    { source: 'node3', target: 'node1', value: 15 },
+                    { source: 'OOSDD', target: 'DS', value: 10 },
+                    { source: 'OOSDD', target: 'UI', value: 10 },
+                    { source: 'OOSDD', target: 'WD', value: 10 },
+                ]
+            },
+            {
+                id: 'MC',
+                group: 'group',
+                links: [
+                    { source: 'MC', target: 'IOT', value: 10 },
+                ]
+            },
+
+            //Derde rang
+            {
+                id: 'CAA',
+                group: 'group',
+                links: [
+                    { source: 'CAA', target: 'AIS', value: 10 },
+                    { source: 'CAA', target: 'MIT', value: 10 },
+                    { source: 'CAA', target: 'DO', value: 10 },
+                ]
+            },
+            {
+                id: 'DS',
+                group: 'group',
+                links: [
+                    { source: 'DS', target: 'AIS', value: 10 },
+                    { source: 'DS', target: 'MIT', value: 10 },
+                    { source: 'DS', target: 'ML', value: 10 },
+                    { source: 'DS', target: 'QSD', value: 10 },
+                ]
+            },
+            {
+                id: 'UI',
+                group: 'group',
+                links: [
+                    { source: 'UI', target: 'MIT', value: 10 },
+                    { source: 'UI', target: 'UXD', value: 10 },
+                ]
+            },
+            {
+                id: 'WD',
+                group: 'group',
+                links: [
+                    { source: 'WD', target: 'DO', value: 10 },
+                    { source: 'WD', target: 'QSD', value: 10 },
+                ]
+            },
+            {
+                id: 'IOT',
+                group: 'group',
+                links: [
+                    { source: 'IOT', target: 'QSD', value: 10 },
+                    { source: 'IOT', target: 'CE', value: 10 },
+                ]
+            },
+
+            //Vierde rang
+            {
+                id: 'AIS',
+                group: 'ais',
+                links: [
+
+                ]
+            },
+            {
+                id: 'MIT',
+                group: 'mt',
+                links: [
+
+                ]
+            },
+            {
+                id: 'ML',
+                group: 'ml',
+                links: [
+
+                ]
+            },
+            {
+                id: 'UXD',
+                group: 'uxd',
+                links: [
+
+                ]
+            },
+            {
+                id: 'DO',
+                group: 'do',
+                links: [
+
+                ]
+            },
+            {
+                id: 'QSD',
+                group: 'qsd',
+                links: [
+
+                ]
+            },
+            {
+                id: 'CE',
+                group: 'ce',
+                links: [
+
                 ]
             },
         ];
