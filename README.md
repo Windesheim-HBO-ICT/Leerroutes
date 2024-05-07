@@ -48,7 +48,7 @@ Om te gaan ontwikkelen voor Leerroutes zijn zal je deze commando's moeten uitvoe
 
 Ten eerste moet leerroutes gebuild worden door middel van [Webpack](https://webpack.js.org/):
 ```bash
-yarn workspace leerroutes build
+yarn workspace leerroutes dev:build
 ```
 en dan kan je het direct gebruiken met `test-site` via:
 ```bash

@@ -14,3 +14,9 @@ header {
 main {
     padding: 20px;
 }
+
+leerroute-workspace {
+    display: block;
+    width: 100%;
+    height: 100%;
+}

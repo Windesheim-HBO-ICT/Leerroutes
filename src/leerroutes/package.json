@@ -7,7 +7,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "webpack"
+    "dev:build": "webpack --mode=development"
   },
   "devDependencies": {
     "webpack": "^5.91.0",

@@ -1,20 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leerroutes</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <header>
         <h1>Leerroutes Testing</h1>
     </header>
     <main>
         <!-- Include the Leerroutes workspace element -->
-        <leerroute-workspace id="myWorkspace" width="800" height="600"></leerroute-workspace>
+        <leerroute-workspace id="leerrouteWorkspace"></leerroute-workspace>
     </main>
     <!-- Include the JavaScript file provided by Leerroutes package -->
     <script src="vendor/Leerroutes/dist/bundle.js"></script>
+
+    <!-- Add items to the workspace -->
+    <script>
+        const leerrouteWorkspace = document.getElementById('leerrouteWorkspace');
+
+        const leerrouteItems = [
+            {
+                id: 'node1',
+                group: 'group1',
+                links: [
+                    { source: 'node1', target: 'node2', value: 10 },
+                ]
+            },
+            {
+                id: 'node2',
+                group: 'group2',
+                links: [
+                    { source: 'node2', target: 'node3', value: 20 },
+                ]
+            },
+            {
+                id: 'node3',
+                group: 'group1',
+                links: [
+                    { source: 'node3', target: 'node1', value: 15 },
+                ]
+            },
+        ];
+
+        leerrouteWorkspace.setLeerrouteItems(leerrouteItems);
+    </script>
 </body>
+
 </html>
