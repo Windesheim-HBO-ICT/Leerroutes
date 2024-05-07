@@ -26,10 +26,7 @@ export class LeerrouteWorkspace extends HTMLElement {
         // svg is used to display the nodes and links, the actual workspace
         const svg = d3.select(this.shadowRoot)
             .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .attr("viewBox", [0, 0, width, height])
-            .attr("style", "max-width: 100%; height: auto;");
+            .attr("style", "width: 100%; height: 100%;");
 
         // Links between nodes
         const link = svg.append("g")
