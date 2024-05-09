@@ -1,0 +1,8 @@
+{
+  "name": "leerroutes",
+  "private": true,
+  "workspaces": [
+    "src/leerroutes",
+    "src/test-site"
+  ]
+}

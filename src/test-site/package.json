@@ -1,0 +1,15 @@
+{
+  "name": "test-site",
+  "version": "1.0.0",
+  "description": "Test site for Leerroutes NPM package",
+  "main": "server.js",
+  "author": "Labhatorian",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "express": "^4.19.2"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
