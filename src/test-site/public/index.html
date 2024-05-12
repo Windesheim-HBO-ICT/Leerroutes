@@ -14,7 +14,7 @@
     </header>
     <main>
         <!-- Include the Leerroutes workspace element -->
-        <leerroute-workspace id="leerrouteWorkspace"></leerroute-workspace>
+        <leerroute-workspace id="leerrouteWorkspace" distance=300></leerroute-workspace>
     </main>
     <!-- Include the JavaScript file provided by Leerroutes package -->
     <script src="vendor/Leerroutes/dist/bundle.js"></script>
@@ -23,17 +23,23 @@
     <script>
         const leerrouteWorkspace = document.getElementById('leerrouteWorkspace');
 
-        //TODO: Simplify
+        //TODO: Make responsive based on window/viewport
+        const groupPositions = {
+            propedeuse: { x: 400, y: 400 },
+            secondRang: { x: 600, y: 250 },
+            thirdRang: { x: 850, y: 200 },
+            fourthRang: { x: 1200, y: 100 },
+        };
+
+        //Group is for colour from d3
         const leerrouteItems = [
             //Propedeuse
             {
                 id: 'P',
                 group: 'propedeuse',
-                links: [
-                    { source: 'P', target: 'HCI', value: 10 },
-                    { source: 'P', target: 'BPM', value: 10 },
-                    { source: 'P', target: 'OOSDD', value: 10 },
-                    { source: 'P', target: 'MC', value: 10 },
+                groupPosition: 'propedeuse',
+                children: [
+                    'HCI', 'BPM', 'OOSDD', 'MC'
                 ]
             },
 
@@ -41,34 +47,33 @@
             {
                 id: 'HCI',
                 group: 'group',
-                links: [
-                    { source: 'HCI', target: 'CAA', value: 10 },
-                    { source: 'HCI', target: 'DS', value: 10 },
+                groupPosition: 'secondRang',
+                children: [
+                    'CAA', 'DS'
                 ]
             },
             {
                 id: 'BPM',
                 group: 'group',
-                links: [
-                    { source: 'BPM', target: 'CAA', value: 10 },
-                    { source: 'BPM', target: 'DS', value: 10 },
-                    { source: 'BPM', target: 'UI', value: 10 },
+                groupPosition: 'secondRang',
+                children: [
+                    'CAA', 'DS', 'UI'
                 ]
             },
             {
                 id: 'OOSDD',
                 group: 'group',
-                links: [
-                    { source: 'OOSDD', target: 'DS', value: 10 },
-                    { source: 'OOSDD', target: 'UI', value: 10 },
-                    { source: 'OOSDD', target: 'WD', value: 10 },
+                groupPosition: 'secondRang',
+                children: [
+                    'DS', 'UI', 'WD'
                 ]
             },
             {
                 id: 'MC',
                 group: 'group',
-                links: [
-                    { source: 'MC', target: 'IOT', value: 10 },
+                groupPosition: 'secondRang',
+                children: [
+                    'IOT'
                 ]
             },
 
@@ -76,44 +81,41 @@
             {
                 id: 'CAA',
                 group: 'group',
-                links: [
-                    { source: 'CAA', target: 'AIS', value: 10 },
-                    { source: 'CAA', target: 'MIT', value: 10 },
-                    { source: 'CAA', target: 'DO', value: 10 },
+                groupPosition: 'thirdRang',
+                children: [
+                    'AIS', 'MIT', 'DO'
                 ]
             },
             {
                 id: 'DS',
                 group: 'group',
-                links: [
-                    { source: 'DS', target: 'AIS', value: 10 },
-                    { source: 'DS', target: 'MIT', value: 10 },
-                    { source: 'DS', target: 'ML', value: 10 },
-                    { source: 'DS', target: 'QSD', value: 10 },
+                groupPosition: 'thirdRang',
+                children: [
+                    'AIS', 'MIT', 'ML', 'QSD'
                 ]
             },
             {
                 id: 'UI',
                 group: 'group',
-                links: [
-                    { source: 'UI', target: 'MIT', value: 10 },
-                    { source: 'UI', target: 'UXD', value: 10 },
+                groupPosition: 'thirdRang',
+                children: [
+                    'MIT', 'UXD'
                 ]
             },
             {
                 id: 'WD',
                 group: 'group',
-                links: [
-                    { source: 'WD', target: 'DO', value: 10 },
-                    { source: 'WD', target: 'QSD', value: 10 },
+                groupPosition: 'thirdRang',
+                children: [
+                    'DO', 'QSD'
                 ]
             },
             {
                 id: 'IOT',
                 group: 'group',
-                links: [
-                    { source: 'IOT', target: 'QSD', value: 10 },
-                    { source: 'IOT', target: 'CE', value: 10 },
+                groupPosition: 'thirdRang',
+                children: [
+                    'QSD', 'CE'
                 ]
             },
 
@@ -121,55 +123,48 @@
             {
                 id: 'AIS',
                 group: 'ais',
-                links: [
-
-                ]
+                groupPosition: 'fourthRang',
+                children: []
             },
             {
                 id: 'MIT',
                 group: 'mt',
-                links: [
-
-                ]
+                groupPosition: 'fourthRang',
+                children: []
             },
             {
                 id: 'ML',
                 group: 'ml',
-                links: [
-
-                ]
+                groupPosition: 'fourthRang',
+                children: []
             },
             {
                 id: 'UXD',
                 group: 'uxd',
-                links: [
-
-                ]
+                groupPosition: 'fourthRang',
+                children: []
             },
             {
                 id: 'DO',
                 group: 'do',
-                links: [
-
-                ]
+                groupPosition: 'fourthRang',
+                children: []
             },
             {
                 id: 'QSD',
                 group: 'qsd',
-                links: [
-
-                ]
+                groupPosition: 'fourthRang',
+                children: []
             },
             {
                 id: 'CE',
                 group: 'ce',
-                links: [
-
-                ]
+                groupPosition: 'fourthRang',
+                children: []
             },
         ];
 
-        leerrouteWorkspace.setLeerrouteItems(leerrouteItems);
+        leerrouteWorkspace.setLeerrouteItems(leerrouteItems, groupPositions);
     </script>
 </body>
 
