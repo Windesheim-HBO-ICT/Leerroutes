@@ -26,6 +26,17 @@ export class LeerrouteWorkspace extends HTMLElement {
     setLeerrouteItems(leerrouteItems) {
         console.log("Received leerrouteItems:", leerrouteItems);
         this.leerrouteItems = leerrouteItems;
+
+        //Simplify links so we don't need to in test-site
+        this.leerrouteItems = leerrouteItems.map(item => {
+            const links = item.children.map(childId => ({
+                source: item.id,
+                target: childId,
+                value: 10
+            }));
+            return { ...item, links };
+        });
+
         this.updateWorkspace();
     }
 

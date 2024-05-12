@@ -23,17 +23,13 @@
     <script>
         const leerrouteWorkspace = document.getElementById('leerrouteWorkspace');
 
-        //TODO: Simplify
         const leerrouteItems = [
             //Propedeuse
             {
                 id: 'P',
                 group: 'propedeuse',
-                links: [
-                    { source: 'P', target: 'HCI', value: 10 },
-                    { source: 'P', target: 'BPM', value: 10 },
-                    { source: 'P', target: 'OOSDD', value: 10 },
-                    { source: 'P', target: 'MC', value: 10 },
+                children: [
+                    'HCI', 'BPM', 'OOSDD', 'MC'
                 ]
             },
 
@@ -41,34 +37,29 @@
             {
                 id: 'HCI',
                 group: 'group',
-                links: [
-                    { source: 'HCI', target: 'CAA', value: 10 },
-                    { source: 'HCI', target: 'DS', value: 10 },
+                children: [
+                    'CAA', 'DS'
                 ]
             },
             {
                 id: 'BPM',
                 group: 'group',
-                links: [
-                    { source: 'BPM', target: 'CAA', value: 10 },
-                    { source: 'BPM', target: 'DS', value: 10 },
-                    { source: 'BPM', target: 'UI', value: 10 },
+                children: [
+                    'CAA', 'DS', 'UI'
                 ]
             },
             {
                 id: 'OOSDD',
                 group: 'group',
-                links: [
-                    { source: 'OOSDD', target: 'DS', value: 10 },
-                    { source: 'OOSDD', target: 'UI', value: 10 },
-                    { source: 'OOSDD', target: 'WD', value: 10 },
+                children: [
+                    'DS', 'UI', 'WD'
                 ]
             },
             {
                 id: 'MC',
                 group: 'group',
-                links: [
-                    { source: 'MC', target: 'IOT', value: 10 },
+                children: [
+                    'IOT'
                 ]
             },
 
@@ -76,44 +67,36 @@
             {
                 id: 'CAA',
                 group: 'group',
-                links: [
-                    { source: 'CAA', target: 'AIS', value: 10 },
-                    { source: 'CAA', target: 'MIT', value: 10 },
-                    { source: 'CAA', target: 'DO', value: 10 },
+                children: [
+                    'AIS', 'MIT', 'DO'
                 ]
             },
             {
                 id: 'DS',
                 group: 'group',
-                links: [
-                    { source: 'DS', target: 'AIS', value: 10 },
-                    { source: 'DS', target: 'MIT', value: 10 },
-                    { source: 'DS', target: 'ML', value: 10 },
-                    { source: 'DS', target: 'QSD', value: 10 },
+                children: [
+                    'AIS', 'MIT', 'ML', 'QSD'
                 ]
             },
             {
                 id: 'UI',
                 group: 'group',
-                links: [
-                    { source: 'UI', target: 'MIT', value: 10 },
-                    { source: 'UI', target: 'UXD', value: 10 },
+                children: [
+                    'MIT', 'UXD'
                 ]
             },
             {
                 id: 'WD',
                 group: 'group',
-                links: [
-                    { source: 'WD', target: 'DO', value: 10 },
-                    { source: 'WD', target: 'QSD', value: 10 },
+                children: [
+                    'DO', 'QSD'
                 ]
             },
             {
                 id: 'IOT',
                 group: 'group',
-                links: [
-                    { source: 'IOT', target: 'QSD', value: 10 },
-                    { source: 'IOT', target: 'CE', value: 10 },
+                children: [
+                    'QSD', 'CE'
                 ]
             },
 
@@ -121,51 +104,37 @@
             {
                 id: 'AIS',
                 group: 'ais',
-                links: [
-
-                ]
+                children: []
             },
             {
                 id: 'MIT',
                 group: 'mt',
-                links: [
-
-                ]
+                children: []
             },
             {
                 id: 'ML',
                 group: 'ml',
-                links: [
-
-                ]
+                children: []
             },
             {
                 id: 'UXD',
                 group: 'uxd',
-                links: [
-
-                ]
+                children: []
             },
             {
                 id: 'DO',
                 group: 'do',
-                links: [
-
-                ]
+                children: []
             },
             {
                 id: 'QSD',
                 group: 'qsd',
-                links: [
-
-                ]
+                children: []
             },
             {
                 id: 'CE',
                 group: 'ce',
-                links: [
-
-                ]
+                children: []
             },
         ];
 
