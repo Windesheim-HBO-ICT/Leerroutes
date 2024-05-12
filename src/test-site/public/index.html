@@ -23,11 +23,21 @@
     <script>
         const leerrouteWorkspace = document.getElementById('leerrouteWorkspace');
 
+        //TODO: Make responsive based on window/viewport
+        const groupPositions = {
+            propedeuse: { x: 400, y: 400 },
+            secondRang: { x: 600, y: 250 },
+            thirdRang: { x: 850, y: 200 },
+            fourthRang: { x: 1200, y: 100 },
+        };
+
+        //Group is for colour from d3
         const leerrouteItems = [
             //Propedeuse
             {
                 id: 'P',
                 group: 'propedeuse',
+                groupPosition: 'propedeuse',
                 children: [
                     'HCI', 'BPM', 'OOSDD', 'MC'
                 ]
@@ -37,6 +47,7 @@
             {
                 id: 'HCI',
                 group: 'group',
+                groupPosition: 'secondRang',
                 children: [
                     'CAA', 'DS'
                 ]
@@ -44,6 +55,7 @@
             {
                 id: 'BPM',
                 group: 'group',
+                groupPosition: 'secondRang',
                 children: [
                     'CAA', 'DS', 'UI'
                 ]
@@ -51,6 +63,7 @@
             {
                 id: 'OOSDD',
                 group: 'group',
+                groupPosition: 'secondRang',
                 children: [
                     'DS', 'UI', 'WD'
                 ]
@@ -58,6 +71,7 @@
             {
                 id: 'MC',
                 group: 'group',
+                groupPosition: 'secondRang',
                 children: [
                     'IOT'
                 ]
@@ -67,6 +81,7 @@
             {
                 id: 'CAA',
                 group: 'group',
+                groupPosition: 'thirdRang',
                 children: [
                     'AIS', 'MIT', 'DO'
                 ]
@@ -74,6 +89,7 @@
             {
                 id: 'DS',
                 group: 'group',
+                groupPosition: 'thirdRang',
                 children: [
                     'AIS', 'MIT', 'ML', 'QSD'
                 ]
@@ -81,6 +97,7 @@
             {
                 id: 'UI',
                 group: 'group',
+                groupPosition: 'thirdRang',
                 children: [
                     'MIT', 'UXD'
                 ]
@@ -88,6 +105,7 @@
             {
                 id: 'WD',
                 group: 'group',
+                groupPosition: 'thirdRang',
                 children: [
                     'DO', 'QSD'
                 ]
@@ -95,6 +113,7 @@
             {
                 id: 'IOT',
                 group: 'group',
+                groupPosition: 'thirdRang',
                 children: [
                     'QSD', 'CE'
                 ]
@@ -104,41 +123,48 @@
             {
                 id: 'AIS',
                 group: 'ais',
+                groupPosition: 'fourthRang',
                 children: []
             },
             {
                 id: 'MIT',
                 group: 'mt',
+                groupPosition: 'fourthRang',
                 children: []
             },
             {
                 id: 'ML',
                 group: 'ml',
+                groupPosition: 'fourthRang',
                 children: []
             },
             {
                 id: 'UXD',
                 group: 'uxd',
+                groupPosition: 'fourthRang',
                 children: []
             },
             {
                 id: 'DO',
                 group: 'do',
+                groupPosition: 'fourthRang',
                 children: []
             },
             {
                 id: 'QSD',
                 group: 'qsd',
+                groupPosition: 'fourthRang',
                 children: []
             },
             {
                 id: 'CE',
                 group: 'ce',
+                groupPosition: 'fourthRang',
                 children: []
             },
         ];
 
-        leerrouteWorkspace.setLeerrouteItems(leerrouteItems);
+        leerrouteWorkspace.setLeerrouteItems(leerrouteItems, groupPositions);
     </script>
 </body>
 

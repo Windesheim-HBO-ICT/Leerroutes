@@ -23,7 +23,7 @@ export class LeerrouteWorkspace extends HTMLElement {
         }
     }
 
-    setLeerrouteItems(leerrouteItems) {
+    setLeerrouteItems(leerrouteItems, groupPositions) {
         console.log("Received leerrouteItems:", leerrouteItems);
         this.leerrouteItems = leerrouteItems;
 
@@ -35,6 +35,21 @@ export class LeerrouteWorkspace extends HTMLElement {
                 value: 10
             }));
             return { ...item, links };
+        });
+
+        // Calculate positions for each node based on group and position, fx and fy are fixed
+        this.leerrouteItems.forEach(item => {
+            const groupPosition = groupPositions[item.groupPosition];
+            if (groupPosition) {
+                item.fx = groupPosition.x;
+                item.fy = groupPosition.y + (groupPosition.offsetY || 0);
+
+                if (!groupPosition.offsetY) {
+                    groupPosition.offsetY = 100; // Default offsetY
+                } else {
+                    groupPosition.offsetY += 100; // Increment offsetY for next item
+                }
+            }
         });
 
         this.updateWorkspace();
