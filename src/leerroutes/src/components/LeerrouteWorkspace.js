@@ -4,40 +4,71 @@ export class LeerrouteWorkspace extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        this.width = '100%';
+        this.height = '100%';
+        if (!this.leerrouteItems) this.leerrouteItems = [] // Prevents expected error
+        this.createWorkspace()
+    }
+
+    // Define the observed attributes, distance for link distance
+    static get observedAttributes() {
+        return ['distance'];
+    }
+
+    // Called when an observed attribute has been added, removed, updated, or replaced
+    attributeChangedCallback(name, oldValue, newValue) {
+        if (name === 'distance') {
+            this.distance = parseInt(newValue);
+            this.updateWorkspace();
+        }
     }
 
     setLeerrouteItems(leerrouteItems) {
+        console.log("Received leerrouteItems:", leerrouteItems);
         this.leerrouteItems = leerrouteItems;
-        this.render();
+        this.updateWorkspace();
     }
 
-    render() {
-        const width = '100%';
-        const height = '100%';
-        const color = d3.scaleOrdinal(d3.schemeCategory10);
-
+    createWorkspace() {
         // Create a container div for the simulation
         const container = document.createElement('div');
-        container.style.width = width;
-        container.style.height = height;
+        container.style.width = this.width;
+        container.style.height = this.height;
         this.shadowRoot.appendChild(container);
 
+        this.container = container; // Store the container reference
+
+        // Render the workspace content
+        this.renderWorkspace();
+    }
+
+    updateWorkspace() {
+        // Clear the existing content
+        this.container.innerHTML = '';
+
+        // Render the workspace content
+        this.renderWorkspace();
+    }
+
+    renderWorkspace() {
+        const color = d3.scaleOrdinal(d3.schemeCategory10);
+
         // Get the width and height of the container so we can calculate center
-        const containerWidth = container.clientWidth;
-        const containerHeight = container.clientHeight;
+        const containerWidth = this.container.clientWidth;
+        const containerHeight = this.container.clientHeight;
 
         // Simulation is essentially the workspace where all the nodes and links will appear
         const simulation = d3.forceSimulation(this.leerrouteItems)
-            .force("link", d3.forceLink(this.leerrouteItems.flatMap(d => d.links)).id(d => d.id).distance(300))
+            .force("link", d3.forceLink(this.leerrouteItems.flatMap(d => d.links)).id(d => d.id).distance(this.distance || 300)) // Use this.distance or default to 300
             .force("charge", d3.forceManyBody())
             .force("center", d3.forceCenter(containerWidth / 2, containerHeight / 2))
             .on("tick", ticked);
 
         // Append SVG to the container
-        const svg = d3.select(container)
+        const svg = d3.select(this.container)
             .append("svg")
-            .attr("width", width)
-            .attr("height", height);
+            .attr("width", this.width)
+            .attr("height", this.height);
 
         // Links between nodes
         const link = svg.append("g")
