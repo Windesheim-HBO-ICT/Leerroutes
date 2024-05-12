@@ -12,21 +12,32 @@ export class LeerrouteWorkspace extends HTMLElement {
     }
 
     render() {
-        const width = 928;
-        const height = 600;
+        const width = '100%';
+        const height = '100%';
         const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+        // Create a container div for the simulation
+        const container = document.createElement('div');
+        container.style.width = width;
+        container.style.height = height;
+        this.shadowRoot.appendChild(container);
+
+        // Get the width and height of the container so we can calculate center
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
 
         // Simulation is essentially the workspace where all the nodes and links will appear
         const simulation = d3.forceSimulation(this.leerrouteItems)
-            .force("link", d3.forceLink(this.leerrouteItems.flatMap(d => d.links)).id(d => d.id).distance(250))
+            .force("link", d3.forceLink(this.leerrouteItems.flatMap(d => d.links)).id(d => d.id).distance(300))
             .force("charge", d3.forceManyBody())
-            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("center", d3.forceCenter(containerWidth / 2, containerHeight / 2))
             .on("tick", ticked);
 
-        // svg is used to display the nodes and links, the actual workspace
-        const svg = d3.select(this.shadowRoot)
+        // Append SVG to the container
+        const svg = d3.select(container)
             .append("svg")
-            .attr("style", "width: 100%; height: 100%;");
+            .attr("width", width)
+            .attr("height", height);
 
         // Links between nodes
         const link = svg.append("g")
@@ -58,7 +69,7 @@ export class LeerrouteWorkspace extends HTMLElement {
             .attr("fill", "#000")
             .style("font-size", "14px");
 
-        //A tick from the simulation
+        // A tick from the simulation
         function ticked() {
             link
                 .attr("x1", d => d.source.x)
@@ -68,30 +79,6 @@ export class LeerrouteWorkspace extends HTMLElement {
 
             node.attr("transform", d => `translate(${d.x},${d.y})`);
         }
-
-        //Drag events
-        node.call(d3.drag()
-            .on("start", dragstarted)
-            .on("drag", dragged)
-            .on("end", dragended));
-
-        function dragstarted(event) {
-            if (!event.active) simulation.alphaTarget(0.3).restart();
-            event.subject.fx = event.subject.x;
-            event.subject.fy = event.subject.y;
-        }
-
-        function dragged(event) {
-            event.subject.fx = event.x;
-            event.subject.fy = event.y;
-        }
-
-        function dragended(event) {
-            if (!event.active) simulation.alphaTarget(0);
-            event.subject.fx = null;
-            event.subject.fy = null;
-        }
-        // End Drag events
 
         simulation.on("end", () => {
             simulation.stop();
