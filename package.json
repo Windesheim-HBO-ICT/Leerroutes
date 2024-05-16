@@ -4,5 +4,7 @@
   "workspaces": [
     "src/leerroutes",
     "src/test-site"
-  ]
+  ],
+  "dependencies": {
+  }
 }
