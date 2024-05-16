@@ -283,6 +283,12 @@ export class LeerrouteWorkspace extends HTMLElement {
       .attr("fill", "#000")
       .style("font-size", "10px");
 
+    // Append callback function
+    node.on("click", function () {
+      const text = d3.select(this).text();
+      alert(text);
+    });
+
     // A tick from the simulation
     function ticked() {
       const radius = 17; // Fixed node radius
