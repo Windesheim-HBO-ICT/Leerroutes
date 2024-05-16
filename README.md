@@ -27,7 +27,7 @@ Het zal op termijn mogelijk zijn om de leerroutes te bekijken met behulp van met
 Hiervoor zal [d3-force](https://d3js.org/d3-force#d3-force) gebruikt worden van [d3](https://d3js.org/) om dit te realiseren.
 
 ## Installatie
-Deze npm-package kan worden geïnstalleerd via (zodra mogelijk):
+Deze npm-package kan worden geïnstalleerd via (zodra mogelijk, staat nog niet op `npm`):
 
 ```bash
 npm install leerroutes
@@ -56,6 +56,11 @@ yarn workspace test-site start
 ``` 
 
 >Merk op dat de leerroutes-npm-package niet direct beschikbaar is in de testsite, je kunt deze toevoegen door het volgende uit te voeren:
+
+```bash
+yarn workspace leerroutes link
+```
+
 ```bash
 yarn workspace test-site link `leerroutes`
 ```
