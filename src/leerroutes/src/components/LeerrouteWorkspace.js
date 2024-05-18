@@ -55,10 +55,22 @@ export class LeerrouteWorkspace extends HTMLElement {
             }
         });
 
-        const createRecursiveLinks = function (item, scopedLeerrouteItems, colour) {
+        const createRecursiveLinks = function (item, scopedLeerrouteItems, colour, constraints = []) {
             if (!item.parents || item.parents.length === 0) return; // If no parent, stop recursion
 
             item.parents.forEach(parent => {
+
+                // Check if current item is listed in the constraints of the parent item
+                if (constraints.some(constraint => {
+                    if (typeof constraint === 'string') {
+                        return constraint === parent;
+                    } else if (typeof constraint === 'object') {
+                        return constraint.from === item.id && constraint.to === parent;
+                    }
+                })){
+                    return;
+                }
+
                 const parentInstance = scopedLeerrouteItems.find(findParent => findParent.id === parent);
                 if (!parent) return;
 
@@ -66,7 +78,7 @@ export class LeerrouteWorkspace extends HTMLElement {
                 const link = {
                     source: parentInstance.id,
                     target: item.id,
-                    value: 10,
+                    value: 20,
                     colour: colour,
                 };
 
@@ -74,17 +86,28 @@ export class LeerrouteWorkspace extends HTMLElement {
                 if (!parentInstance.links) {
                     parentInstance.links = [];
                 }
-                parentInstance.links.push(link);
+
+                // Check if the link already exists
+                const linkExists = parentInstance.links.some(existingLink =>
+                    existingLink.source === link.source &&
+                    existingLink.target === link.target &&
+                    existingLink.value === link.value &&
+                    existingLink.colour === link.colour
+                );
+
+                if (!linkExists) {
+                    parentInstance.links.push(link);
+                }
 
                 // Recursively create links for the parent
-                createRecursiveLinks(parentInstance, scopedLeerrouteItems, colour);
+                createRecursiveLinks(parentInstance, scopedLeerrouteItems, colour, [...constraints, ...parentInstance.constraints]);
             })
         };
 
-        const predefinedColors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow'];
+        const predefinedColors = ['green', 'red', 'purple', 'brown', 'pink', 'gray', 'gold'];
         let colorIndex = 0;
         noChildrenItems.forEach(item => {
-            createRecursiveLinks(item, this.leerrouteItems, predefinedColors[colorIndex])
+            createRecursiveLinks(item, this.leerrouteItems, predefinedColors[colorIndex], item.constraints)
             colorIndex = (colorIndex + 1) % predefinedColors.length; // with cycle back just in case
         })
 
@@ -98,9 +121,9 @@ export class LeerrouteWorkspace extends HTMLElement {
                 item.fy = groupPosition.y + (groupPosition.offsetY || 0);
 
                 if (!groupPosition.offsetY) {
-                    groupPosition.offsetY = 100; // Default offsetY
+                    groupPosition.offsetY = 150; // Default offsetY
                 } else {
-                    groupPosition.offsetY += 100; // Increment offsetY for next item
+                    groupPosition.offsetY += 150; // Increment offsetY for next item
                 }
             }
         });
@@ -182,12 +205,25 @@ export class LeerrouteWorkspace extends HTMLElement {
         // A tick from the simulation
         function ticked() {
             link
-                .attr("x1", d => d.source.x)
-                .attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x)
-                .attr("y2", d => d.target.y);
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => {
+                const yOffset = calculateYOffset(d);
+                const totalHeight = d.source.links.length * 4;
+                return d.source.y + yOffset - totalHeight / 2;
+            })
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => {
+                const yOffset = calculateYOffset(d);
+                const totalHeight = d.source.links.length * 4;
+                return d.target.y + yOffset - totalHeight / 2;
+            });
 
             node.attr("transform", d => `translate(${d.x},${d.y})`);
+
+            function calculateYOffset(d) {
+                const index = d.source.links.indexOf(d);
+                return index * 4; // Increase offset by 2 for each additional link
+            }
         }
 
         simulation.on("end", () => {

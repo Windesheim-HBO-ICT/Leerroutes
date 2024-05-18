@@ -25,10 +25,10 @@
 
         //TODO: Make responsive based on window/viewport
         const groupPositions = {
-            propedeuse: { x: 400, y: 400 },
+            propedeuse: { x: 200, y: 400 },
             secondRang: { x: 600, y: 250 },
-            thirdRang: { x: 850, y: 200 },
-            fourthRang: { x: 1200, y: 100 },
+            thirdRang: { x: 1200, y: 200 },
+            fourthRang: { x: 1600, y: 100 },
         };
 
         //Group is for colour from d3
@@ -40,7 +40,8 @@
                 groupPosition: 'propedeuse',
                 children: [
                     'HCI', 'BPM', 'OOSDD', 'MC'
-                ]
+                ],
+                constraints: []
             },
 
             //Tweede rang
@@ -50,7 +51,8 @@
                 groupPosition: 'secondRang',
                 children: [
                     'CAA', 'DS'
-                ]
+                ],
+                constraints: []
             },
             {
                 id: 'BPM',
@@ -58,7 +60,8 @@
                 groupPosition: 'secondRang',
                 children: [
                     'CAA', 'DS', 'UI'
-                ]
+                ],
+                constraints: []
             },
             {
                 id: 'OOSDD',
@@ -66,7 +69,8 @@
                 groupPosition: 'secondRang',
                 children: [
                     'DS', 'UI', 'WD'
-                ]
+                ],
+                constraints: []
             },
             {
                 id: 'MC',
@@ -74,7 +78,8 @@
                 groupPosition: 'secondRang',
                 children: [
                     'IOT'
-                ]
+                ],
+                constraints: []
             },
 
             //Derde rang
@@ -84,7 +89,8 @@
                 groupPosition: 'thirdRang',
                 children: [
                     'AIS', 'MIT', 'DO'
-                ]
+                ],
+                constraints: []
             },
             {
                 id: 'DS',
@@ -92,7 +98,8 @@
                 groupPosition: 'thirdRang',
                 children: [
                     'AIS', 'MIT', 'ML', 'QSD'
-                ]
+                ],
+                constraints: []
             },
             {
                 id: 'UI',
@@ -100,7 +107,8 @@
                 groupPosition: 'thirdRang',
                 children: [
                     'MIT', 'UXD'
-                ]
+                ],
+                constraints: []
             },
             {
                 id: 'WD',
@@ -108,7 +116,8 @@
                 groupPosition: 'thirdRang',
                 children: [
                     'DO', 'QSD'
-                ]
+                ],
+                constraints: []
             },
             {
                 id: 'IOT',
@@ -116,7 +125,8 @@
                 groupPosition: 'thirdRang',
                 children: [
                     'QSD', 'CE'
-                ]
+                ],
+                constraints: []
             },
 
             //Vierde rang
@@ -124,43 +134,64 @@
                 id: 'AIS',
                 group: 'ais',
                 groupPosition: 'fourthRang',
-                children: []
+                children: [],
+                constraints: [
+                    "OOSDD",
+                    {
+                        from: "CAA",
+                        to: "BPM"
+                    }
+                ]
             },
             {
                 id: 'MIT',
                 group: 'mt',
                 groupPosition: 'fourthRang',
-                children: []
+                children: [],
+                constraints: [
+                    "OOSDD", "HCI"
+                ]
             },
             {
                 id: 'ML',
                 group: 'ml',
                 groupPosition: 'fourthRang',
-                children: []
+                children: [],
+                constraints: [
+                    "HCI"
+                ]
             },
             {
                 id: 'UXD',
                 group: 'uxd',
                 groupPosition: 'fourthRang',
-                children: []
+                children: [],
+                constraints: []
             },
             {
                 id: 'DO',
                 group: 'do',
                 groupPosition: 'fourthRang',
-                children: []
+                children: [],
+                constraints: [
+                    "BPM"
+                ]
             },
             {
                 id: 'QSD',
                 group: 'qsd',
                 groupPosition: 'fourthRang',
-                children: []
+                children: [],
+                constraints: [
+                    "BPM", "HCI"
+                ]
             },
             {
                 id: 'CE',
                 group: 'ce',
                 groupPosition: 'fourthRang',
-                children: []
+                children: [],
+                constraints: []
             },
         ];
 
