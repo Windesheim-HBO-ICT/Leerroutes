@@ -30,7 +30,7 @@ export class LeerrouteWorkspace extends HTMLElement {
         // Add a parents array to each item for metrolines
         this.leerrouteItems.forEach(item => {
             item.children.forEach(childID => {
-                const childItem = leerrouteItems.find(childItem => childItem.id === childID)
+                const childItem = this.leerrouteItems.find(childItem => childItem.id === childID)
                 if (childItem) {
                     if (!childItem.parents) {
                         childItem.parents = [];
@@ -40,17 +40,55 @@ export class LeerrouteWorkspace extends HTMLElement {
             });
         });
 
-        console.log("Parents added: ",leerrouteItems);
+        console.log("Parents added: ", this.leerrouteItems);
 
-        //Simplify links so we don't need to in test-site and make metrolines
-        this.leerrouteItems = leerrouteItems.map(item => {
-            const links = item.children.map(childId => ({
-                source: item.id,
-                target: childId,
-                value: 10
-            }));
-            return { ...item, links };
+
+        //Create links backwards starting with items that have no children
+        const noChildrenItems = this.leerrouteItems.filter(item => {
+            return !item.children || item.children.length === 0;
         });
+
+        //Make sure every item has a link array
+        this.leerrouteItems.forEach(item => {
+            if (!item.links) {
+                item.links = [];
+            }
+        });
+
+        const createRecursiveLinks = function (item, scopedLeerrouteItems, colour) {
+            if (!item.parents || item.parents.length === 0) return; // If no parent, stop recursion
+
+            item.parents.forEach(parent => {
+                const parentInstance = scopedLeerrouteItems.find(findParent => findParent.id === parent);
+                if (!parent) return;
+
+                // Create the link
+                const link = {
+                    source: parentInstance.id,
+                    target: item.id,
+                    value: 10,
+                    colour: colour,
+                };
+
+                // Add link to the parent item
+                if (!parentInstance.links) {
+                    parentInstance.links = [];
+                }
+                parentInstance.links.push(link);
+
+                // Recursively create links for the parent
+                createRecursiveLinks(parentInstance, scopedLeerrouteItems, colour);
+            })
+        };
+
+        const predefinedColors = ['red', 'blue', 'green', 'orange', 'purple', 'yellow'];
+        let colorIndex = 0;
+        noChildrenItems.forEach(item => {
+            createRecursiveLinks(item, this.leerrouteItems, predefinedColors[colorIndex])
+            colorIndex = (colorIndex + 1) % predefinedColors.length; // with cycle back just in case
+        })
+
+        console.log("Links added: ", this.leerrouteItems);
 
         // Calculate positions for each node based on group and position, fx and fy are fixed
         this.leerrouteItems.forEach(item => {
@@ -113,12 +151,12 @@ export class LeerrouteWorkspace extends HTMLElement {
 
         // Links between nodes
         const link = svg.append("g")
-            .attr("stroke", "#999")
             .attr("stroke-opacity", 0.6)
             .selectAll()
             .data(this.leerrouteItems.flatMap(d => d.links))
             .join("line")
-            .attr("stroke-width", d => Math.sqrt(d.value));
+            .attr("stroke-width", d => Math.sqrt(d.value))
+            .attr("stroke", d => d.colour);
 
         // Node, a LeerrouteItem
         const node = svg.append("g")
