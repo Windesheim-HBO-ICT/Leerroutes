@@ -27,7 +27,22 @@ export class LeerrouteWorkspace extends HTMLElement {
         console.log("Received leerrouteItems:", leerrouteItems);
         this.leerrouteItems = leerrouteItems;
 
-        //Simplify links so we don't need to in test-site
+        // Add a parents array to each item for metrolines
+        this.leerrouteItems.forEach(item => {
+            item.children.forEach(childID => {
+                const childItem = leerrouteItems.find(childItem => childItem.id === childID)
+                if (childItem) {
+                    if (!childItem.parents) {
+                        childItem.parents = [];
+                    }
+                    childItem.parents.push(item.id);
+                }
+            });
+        });
+
+        console.log("Parents added: ",leerrouteItems);
+
+        //Simplify links so we don't need to in test-site and make metrolines
         this.leerrouteItems = leerrouteItems.map(item => {
             const links = item.children.map(childId => ({
                 source: item.id,
