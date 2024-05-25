@@ -154,7 +154,7 @@ export class LeerrouteWorkspace extends HTMLElement {
   }
 
   updateNodePositions(groupPositions) {
-    const containerWidth = this.container.clientWidth - 40; //Circle width padding
+    const containerWidth = this.container.clientWidth - 40; // Circle width padding
     const containerHeight = this.container.clientHeight;
 
     // Calculate scale factors for x and y positions
@@ -164,10 +164,29 @@ export class LeerrouteWorkspace extends HTMLElement {
       .range([0, containerWidth]);
     const yScale = d3.scaleLinear().domain([0, 1]).range([0, containerHeight]);
 
+    // Function to calculate vertical spacing based on the number of items in each group
+    const calculateVerticalSpacing = (groupPosition) => {
+      const itemCount = this.leerrouteItems.filter(
+        (item) => item.groupPosition === groupPosition,
+      ).length;
+      const verticalSpacing = containerHeight / itemCount;
+      // Adjust vertical spacing based on the available space
+      return verticalSpacing;
+    };
+
     let index = 0;
-    Object.values(groupPositions).forEach((groupPosition) => {
+    Object.keys(groupPositions).forEach((key) => {
+      const groupPosition = groupPositions[key];
+      groupPosition.index = 0;
+
+      const itemCount = this.leerrouteItems.filter(
+        (item) => item.groupPosition === key,
+      ).length;
+
+      const groupHeight = (calculateVerticalSpacing(key) * (itemCount - 1)) / 2;
       const x = xScale(index) + 20;
-      const y = yScale(0.5); // Center vertically
+      const y = yScale(0.5) - groupHeight;
+
       groupPosition.x = x;
       groupPosition.y = y;
       index++;
@@ -175,10 +194,15 @@ export class LeerrouteWorkspace extends HTMLElement {
 
     this.leerrouteItems.forEach((item) => {
       const groupPosition = groupPositions[item.groupPosition];
+      if (!groupPosition.index) groupPosition.index = 0;
       if (groupPosition) {
-        // Scale and set the fixed x and y positions
+        // Scale and set the fixed x position
         item.fx = groupPosition.x;
-        item.fy = groupPosition.y;
+        // Calculate and set the dynamic y position based on group index and vertical spacing
+        item.fy =
+          groupPosition.y +
+          groupPosition.index * calculateVerticalSpacing(item.groupPosition);
+        groupPosition.index += 1;
       }
     });
   }
@@ -264,7 +288,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       .attr("text-anchor", "middle")
       .attr("dy", ".35em")
       .attr("fill", "#000")
-      .style("font-size", "12px");
+      .style("font-size", "10px");
 
     // A tick from the simulation
     function ticked() {
