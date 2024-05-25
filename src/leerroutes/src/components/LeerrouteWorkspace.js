@@ -17,19 +17,6 @@ export class LeerrouteWorkspace extends HTMLElement {
     });
   }
 
-  // Define the observed attributes, distance for link distance
-  static get observedAttributes() {
-    return ["distance"];
-  }
-
-  // Called when an observed attribute has been added, removed, updated, or replaced
-  attributeChangedCallback(name, oldValue, newValue) {
-    if (name === "distance") {
-      this.distance = parseInt(newValue);
-      this.updateWorkspace();
-    }
-  }
-
   setLeerrouteItems(leerrouteItems) {
     console.log("Received leerrouteItems:", leerrouteItems);
     this.leerrouteItems = leerrouteItems;
