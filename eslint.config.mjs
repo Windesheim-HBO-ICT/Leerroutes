@@ -8,6 +8,12 @@ export default [
     rules: {
       "no-unused-vars": "warn",
       "no-undef": "off",
+      "prettier/prettier": [
+        "error",
+        {
+          endOfLine: "auto",
+        },
+      ],
     },
   },
 ];
