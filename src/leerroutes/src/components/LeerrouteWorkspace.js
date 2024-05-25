@@ -247,9 +247,8 @@ export class LeerrouteWorkspace extends HTMLElement {
         "link",
         d3
           .forceLink(this.leerrouteItems.flatMap((d) => d.links))
-          .id((d) => d.id)
-          .distance(this.distance || 300),
-      ) // Use this.distance or default to 300
+          .id((d) => d.id),
+      )
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(containerWidth / 2, containerHeight / 2))
       .on("tick", ticked);
@@ -299,25 +298,31 @@ export class LeerrouteWorkspace extends HTMLElement {
 
     // A tick from the simulation
     function ticked() {
+      const radius = 17; // Fixed node radius
+      const linkSpacing = 2; // Space between each link
+
       link
-        .attr("x1", (d) => d.source.x)
-        .attr("y1", (d) => {
-          const yOffset = calculateYOffset(d);
-          const totalHeight = d.source.links.length * 4;
-          return d.source.y + yOffset - totalHeight / 2;
-        })
-        .attr("x2", (d) => d.target.x)
-        .attr("y2", (d) => {
-          const yOffset = calculateYOffset(d);
-          const totalHeight = d.source.links.length * 4;
-          return d.target.y + yOffset - totalHeight / 2;
-        });
+        .attr("x1", (d) => calculateX(d.source, d.index, d.source.links.length))
+        .attr("y1", (d) => calculateY(d.source, d.index, d.source.links.length))
+        .attr("x2", (d) => calculateX(d.target, d.index, d.source.links.length))
+        .attr("y2", (d) =>
+          calculateY(d.target, d.index, d.source.links.length),
+        );
 
       node.attr("transform", (d) => `translate(${d.x},${d.y})`);
 
-      function calculateYOffset(d) {
-        const index = d.source.links.indexOf(d);
-        return index * 4; // Increase offset by 4 for each additional link
+      function calculateX(node, index, totalLinks) {
+        const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
+        const offsetAngle =
+          (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
+        return node.x + radius * Math.cos(angle + offsetAngle);
+      }
+
+      function calculateY(node, index, totalLinks) {
+        const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
+        const offsetAngle =
+          (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
+        return node.y + radius * Math.sin(angle + offsetAngle);
       }
     }
 
