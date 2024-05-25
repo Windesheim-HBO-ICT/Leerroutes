@@ -12,7 +12,7 @@ export class LeerrouteWorkspace extends HTMLElement {
     // Add event listener for window resize
     window.addEventListener("resize", () => {
       this.simulation.stop();
-      this.updateNodePositions(this.groupPositions);
+      if (this.groupPositions) this.updateNodePositions(this.groupPositions);
       this.simulation.restart();
     });
   }
@@ -30,10 +30,10 @@ export class LeerrouteWorkspace extends HTMLElement {
     }
   }
 
-  setLeerrouteItems(leerrouteItems, groupPositions) {
+  setLeerrouteItems(leerrouteItems) {
     console.log("Received leerrouteItems:", leerrouteItems);
     this.leerrouteItems = leerrouteItems;
-    this.groupPositions = groupPositions;
+    this.groupPositions = {};
 
     // Add a parents array to each item for metrolines
     this.leerrouteItems.forEach((item) => {
@@ -48,6 +48,10 @@ export class LeerrouteWorkspace extends HTMLElement {
           childItem.parents.push(item.id);
         }
       });
+
+      if (!this.groupPositions[item.groupPosition]) {
+        this.groupPositions[item.groupPosition] = {};
+      }
     });
 
     console.log("Parents added: ", this.leerrouteItems);
@@ -148,7 +152,7 @@ export class LeerrouteWorkspace extends HTMLElement {
     console.log("Links added: ", this.leerrouteItems);
 
     // Calculate positions for each node based on group and position, fx and fy are fixed
-    this.updateNodePositions(groupPositions);
+    this.updateNodePositions(this.groupPositions);
 
     this.updateWorkspace();
   }
