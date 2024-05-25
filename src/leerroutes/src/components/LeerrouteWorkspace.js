@@ -11,7 +11,9 @@ export class LeerrouteWorkspace extends HTMLElement {
 
     // Add event listener for window resize
     window.addEventListener("resize", () => {
-      this.updateWorkspace();
+      this.simulation.stop();
+      this.updateNodePositions(this.groupPositions);
+      this.simulation.restart();
     });
   }
 
@@ -189,10 +191,6 @@ export class LeerrouteWorkspace extends HTMLElement {
     this.shadowRoot.appendChild(container);
     this.container = container; // Store the container reference
 
-    // Add event listener for container resize
-    const resizeObserver = new ResizeObserver(this.updateWorkspace.bind(this));
-    resizeObserver.observe(container);
-
     // Render the workspace content
     this.renderWorkspace();
   }
@@ -200,10 +198,6 @@ export class LeerrouteWorkspace extends HTMLElement {
   updateWorkspace() {
     // Clear the existing content
     this.container.innerHTML = "";
-
-    // Recalculate positions for nodes based on updated container dimensions
-    this.updateNodePositions(this.groupPositions);
-
     // Render the workspace content
     this.renderWorkspace();
   }
@@ -228,6 +222,8 @@ export class LeerrouteWorkspace extends HTMLElement {
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(containerWidth / 2, containerHeight / 2))
       .on("tick", ticked);
+
+    this.simulation = simulation;
 
     // Append SVG to the container
     const svg = d3
