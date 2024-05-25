@@ -166,7 +166,10 @@ export class LeerrouteWorkspace extends HTMLElement {
       .scaleLinear()
       .domain([0, Object.keys(groupPositions).length - 1])
       .range([0, containerWidth]);
-    const yScale = d3.scaleLinear().domain([0, 1]).range([0, containerHeight]);
+    const yScale = d3
+      .scaleLinear()
+      .domain([0, containerHeight])
+      .range([0, containerHeight]);
 
     // Function to calculate vertical spacing based on the number of items in each group
     const calculateVerticalSpacing = (groupPosition) => {
@@ -189,7 +192,7 @@ export class LeerrouteWorkspace extends HTMLElement {
 
       const groupHeight = (calculateVerticalSpacing(key) * (itemCount - 1)) / 2;
       const x = xScale(index) + 20;
-      const y = yScale(0.5) - groupHeight;
+      const y = yScale(containerHeight / 2) - groupHeight;
 
       groupPosition.x = x;
       groupPosition.y = y;
@@ -257,8 +260,8 @@ export class LeerrouteWorkspace extends HTMLElement {
     const svg = d3
       .select(this.container)
       .append("svg")
-      .attr("width", containerWidth)
-      .attr("height", containerHeight);
+      .attr("width", this.width)
+      .attr("height", this.height);
 
     // Links between nodes
     const link = svg
