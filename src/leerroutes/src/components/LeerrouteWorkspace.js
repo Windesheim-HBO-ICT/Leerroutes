@@ -8,6 +8,11 @@ export class LeerrouteWorkspace extends HTMLElement {
     this.height = "100%";
     if (!this.leerrouteItems) this.leerrouteItems = []; // Prevents expected error
     this.createWorkspace();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", () => {
+      this.updateWorkspace();
+    });
   }
 
   // Define the observed attributes, distance for link distance
@@ -26,6 +31,7 @@ export class LeerrouteWorkspace extends HTMLElement {
   setLeerrouteItems(leerrouteItems, groupPositions) {
     console.log("Received leerrouteItems:", leerrouteItems);
     this.leerrouteItems = leerrouteItems;
+    this.groupPositions = groupPositions;
 
     // Add a parents array to each item for metrolines
     this.leerrouteItems.forEach((item) => {
@@ -140,21 +146,41 @@ export class LeerrouteWorkspace extends HTMLElement {
     console.log("Links added: ", this.leerrouteItems);
 
     // Calculate positions for each node based on group and position, fx and fy are fixed
+    this.updateNodePositions(groupPositions);
+
+    this.updateWorkspace();
+  }
+
+
+
+  updateNodePositions(groupPositions) {
+    const containerWidth = this.container.clientWidth;
+    const containerHeight = this.container.clientHeight;
+
+    // Calculate scale factors for x and y positions
+    const xScale = d3
+      .scaleLinear()
+      .domain([0, Object.keys(groupPositions).length - 1])
+      .range([0, containerWidth]);
+    const yScale = d3.scaleLinear().domain([0, 1]).range([0, containerHeight]);
+
+    let index = 0;
+    Object.values(groupPositions).forEach((groupPosition) => {
+      const x = xScale(index);
+      const y = yScale(0.5); // Center vertically
+      groupPosition.x = x;
+      groupPosition.y = y;
+      index++;
+    });
+
     this.leerrouteItems.forEach((item) => {
       const groupPosition = groupPositions[item.groupPosition];
       if (groupPosition) {
+        // Scale and set the fixed x and y positions
         item.fx = groupPosition.x;
-        item.fy = groupPosition.y + (groupPosition.offsetY || 0);
-
-        if (!groupPosition.offsetY) {
-          groupPosition.offsetY = 150; // Default offsetY
-        } else {
-          groupPosition.offsetY += 150; // Increment offsetY for next item
-        }
+        item.fy = groupPosition.y;
       }
     });
-
-    this.updateWorkspace();
   }
 
   createWorkspace() {
@@ -163,8 +189,11 @@ export class LeerrouteWorkspace extends HTMLElement {
     container.style.width = this.width;
     container.style.height = this.height;
     this.shadowRoot.appendChild(container);
-
     this.container = container; // Store the container reference
+
+    // Add event listener for container resize
+    const resizeObserver = new ResizeObserver(this.updateWorkspace.bind(this));
+    resizeObserver.observe(container);
 
     // Render the workspace content
     this.renderWorkspace();
@@ -173,6 +202,9 @@ export class LeerrouteWorkspace extends HTMLElement {
   updateWorkspace() {
     // Clear the existing content
     this.container.innerHTML = "";
+
+    // Recalculate positions for nodes based on updated container dimensions
+    this.updateNodePositions(this.groupPositions);
 
     // Render the workspace content
     this.renderWorkspace();
@@ -203,8 +235,8 @@ export class LeerrouteWorkspace extends HTMLElement {
     const svg = d3
       .select(this.container)
       .append("svg")
-      .attr("width", this.width)
-      .attr("height", this.height);
+      .attr("width", containerWidth)
+      .attr("height", containerHeight);
 
     // Links between nodes
     const link = svg
@@ -228,7 +260,7 @@ export class LeerrouteWorkspace extends HTMLElement {
     // Append circles for nodes
     node
       .append("circle")
-      .attr("r", 40)
+      .attr("r", 20)
       .attr("fill", (d) => color(d.group));
 
     // Append text for labels
@@ -238,7 +270,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       .attr("text-anchor", "middle")
       .attr("dy", ".35em")
       .attr("fill", "#000")
-      .style("font-size", "14px");
+      .style("font-size", "12px");
 
     // A tick from the simulation
     function ticked() {
@@ -260,7 +292,7 @@ export class LeerrouteWorkspace extends HTMLElement {
 
       function calculateYOffset(d) {
         const index = d.source.links.indexOf(d);
-        return index * 4; // Increase offset by 2 for each additional link
+        return index * 4; // Increase offset by 4 for each additional link
       }
     }
 
