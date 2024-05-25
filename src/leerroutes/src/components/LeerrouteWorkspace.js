@@ -151,10 +151,8 @@ export class LeerrouteWorkspace extends HTMLElement {
     this.updateWorkspace();
   }
 
-
-
   updateNodePositions(groupPositions) {
-    const containerWidth = this.container.clientWidth;
+    const containerWidth = this.container.clientWidth - 40; //Circle width padding
     const containerHeight = this.container.clientHeight;
 
     // Calculate scale factors for x and y positions
@@ -166,7 +164,7 @@ export class LeerrouteWorkspace extends HTMLElement {
 
     let index = 0;
     Object.values(groupPositions).forEach((groupPosition) => {
-      const x = xScale(index);
+      const x = xScale(index) + 20;
       const y = yScale(0.5); // Center vertically
       groupPosition.x = x;
       groupPosition.y = y;
