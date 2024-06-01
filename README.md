@@ -54,6 +54,8 @@ Na het pushen naar main wordt er een [workflow](https://github.com/Windesheim-HB
 Als je wilt bijdragen aan de Leerroutes-package, zijn er een paar belangrijke dingen om te weten. \
 Allereerst wordt er gebruik gemaakt van [Yarn](https://yarnpkg.com/) en Yarn  Workspaces om de package in `./src/leerroutes` af te scheiden van de testsite in `./src/test-site`.
 
+Ook wordt er gebruik gemaakt van [Eslint](https://eslint.org/) om kwaliteit af te dwingen. Wij raden een extensie in je IDE te installeren zoals [Eslint van Microsoft](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
+
 Om te gaan ontwikkelen voor Leerroutes zijn zal je deze commando's moeten uitvoeren:
 
 Ten eerste moet leerroutes gebuild worden door middel van [Webpack](https://webpack.js.org/):
@@ -74,6 +76,9 @@ yarn workspace leerroutes link
 ```bash
 yarn workspace test-site link `leerroutes`
 ```
+
+--- 
+
 
 ### Bijdragen
 Om bij te dragen aan dit project kun je een fork maken en vervolgens pull-requests maken naar deze repository.

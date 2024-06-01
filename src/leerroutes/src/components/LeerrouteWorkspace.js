@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 
+// Note that links here are our metrolines.
 export class LeerrouteWorkspace extends HTMLElement {
   constructor() {
     super();
@@ -9,9 +10,9 @@ export class LeerrouteWorkspace extends HTMLElement {
     if (!this.leerrouteItems) this.leerrouteItems = []; // Prevents expected error
     this.createWorkspace();
 
-    // Add event listener for window resize
+    // Add event listener for window resize for responsive
     window.addEventListener("resize", () => {
-      this.simulation.stop();
+      this.simulation.stop(); // stop and restart simulation to prevent flickering
       if (this.groupPositions) this.updateNodePositions(this.groupPositions);
       this.simulation.restart();
     });
@@ -22,7 +23,7 @@ export class LeerrouteWorkspace extends HTMLElement {
     this.leerrouteItems = leerrouteItems;
     this.groupPositions = {};
 
-    // Add a parents array to each item for metrolines
+    // Add a parents array to each item for metrolines to prevent error
     this.leerrouteItems.forEach((item) => {
       item.children.forEach((childID) => {
         const childItem = this.leerrouteItems.find(
@@ -55,6 +56,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       }
     });
 
+    //Recursive function to create the metrolines/links starting from items with no children.
     const createRecursiveLinks = function (
       item,
       scopedLeerrouteItems,
@@ -116,6 +118,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       });
     };
 
+    //Colours for metrolines
     const predefinedColors = [
       "green",
       "red",
@@ -125,6 +128,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       "gray",
       "gold",
     ];
+
     let colorIndex = 0;
     noChildrenItems.forEach((item) => {
       createRecursiveLinks(
@@ -145,10 +149,10 @@ export class LeerrouteWorkspace extends HTMLElement {
   }
 
   updateNodePositions(groupPositions) {
-    const containerWidth = this.container.clientWidth - 40; // Circle width padding
+    const containerWidth = this.container.clientWidth - 40; // Circle width padding, prevents items being placed outside workspace
     const containerHeight = this.container.clientHeight;
 
-    // Calculate scale factors for x and y positions
+    // Calculate scale factors for x and y positions for responssive
     const xScale = d3
       .scaleLinear()
       .domain([0, Object.keys(groupPositions).length - 1])
@@ -164,10 +168,10 @@ export class LeerrouteWorkspace extends HTMLElement {
         (item) => item.groupPosition === groupPosition,
       ).length;
       const verticalSpacing = containerHeight / itemCount;
-      // Adjust vertical spacing based on the available space
       return verticalSpacing;
     };
 
+    //Calculaton for placement on workspace, built to be responsive as a group
     let index = 0;
     Object.keys(groupPositions).forEach((key) => {
       const groupPosition = groupPositions[key];
@@ -186,11 +190,11 @@ export class LeerrouteWorkspace extends HTMLElement {
       index++;
     });
 
+    //Now calculate each items placement, responsive of course
     this.leerrouteItems.forEach((item) => {
       const groupPosition = groupPositions[item.groupPosition];
       if (!groupPosition.index) groupPosition.index = 0;
       if (groupPosition) {
-        // Scale and set the fixed x position
         item.fx = groupPosition.x;
         // Calculate and set the dynamic y position based on group index and vertical spacing
         item.fy =
@@ -202,21 +206,17 @@ export class LeerrouteWorkspace extends HTMLElement {
   }
 
   createWorkspace() {
-    // Create a container div for the simulation
+    // Create a container div for the simulation for some calculations for responsiveness
     const container = document.createElement("div");
     container.style.width = this.width;
     container.style.height = this.height;
     this.shadowRoot.appendChild(container);
-    this.container = container; // Store the container reference
-
-    // Render the workspace content
+    this.container = container;
     this.renderWorkspace();
   }
 
   updateWorkspace() {
-    // Clear the existing content
     this.container.innerHTML = "";
-    // Render the workspace content
     this.renderWorkspace();
   }
 
@@ -227,7 +227,7 @@ export class LeerrouteWorkspace extends HTMLElement {
     const containerWidth = this.container.clientWidth;
     const containerHeight = this.container.clientHeight;
 
-    // Simulation is essentially the workspace where all the nodes and links will appear
+    // Simulation is the workspace where all the nodes and links will appear
     const simulation = d3
       .forceSimulation(this.leerrouteItems)
       .force(
@@ -239,7 +239,6 @@ export class LeerrouteWorkspace extends HTMLElement {
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(containerWidth / 2, containerHeight / 2))
       .on("tick", ticked);
-
     this.simulation = simulation;
 
     // Append SVG to the container
@@ -249,7 +248,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       .attr("width", this.width)
       .attr("height", this.height);
 
-    // Links between nodes
+    // Links between nodes, the metrolines
     const link = svg
       .append("g")
       .attr("stroke-opacity", 0.6)
@@ -268,13 +267,13 @@ export class LeerrouteWorkspace extends HTMLElement {
       .data(this.leerrouteItems)
       .join("g");
 
-    // Append circles for nodes
+    // Append circles for nodes. This is so we can add labels for the node id, the name of the leerrouteitem
     node
       .append("circle")
       .attr("r", 20)
       .attr("fill", (d) => color(d.group));
 
-    // Append text for labels
+    // Append text as lable to the circle of the node
     node
       .append("text")
       .text((d) => d.id)
@@ -298,6 +297,9 @@ export class LeerrouteWorkspace extends HTMLElement {
 
       node.attr("transform", (d) => `translate(${d.x},${d.y})`);
 
+      //Calculation for metroline placement. Complicated with help from GPT
+      //Basically we try to space the metrolines out so we can actually see individual lines.
+      //And to do so in a way without it looking weird like too much space for just two lines.
       function calculateX(node, index, totalLinks) {
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =

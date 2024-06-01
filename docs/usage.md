@@ -9,7 +9,8 @@ Importeer de Leerroutes package. In de `test-site` linken we er direct naartoe m
 <script src="vendor/Leerroutes/dist/bundle.js"></script>
 ```
 >**Let op** \
-> `vendor` is van `test-site`. Dit is ingesteld i.v.m. CORS. U zal hoogstwaarschijnlijk een ander manier gebruiken dan `test-site` om het te importeren.
+> `vendor` is van `test-site`. Dit is ingesteld i.v.m. CORS. U zal hoogstwaarschijnlijk een ander manier gebruiken dan `test-site` om het te importeren. \
+> Het ingangspunt voor de package is daarnaast altijd `Leerroutes/dist/bundle.js` omdat er Webpack is gebruikt.
 
 Vervolgens voeg de Leerroutes workspace component toe aan uw HTML-pagina.
 
