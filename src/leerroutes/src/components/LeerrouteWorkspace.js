@@ -293,25 +293,34 @@ export class LeerrouteWorkspace extends HTMLElement {
     function ticked() {
       const radius = 17; // Fixed node radius
       const linkSpacing = 2; // Space between each link
-
-      link
-        .attr("x1", (d) => calculateX(d.source, d.index, d.source.links.length))
-        .attr("y1", (d) => calculateY(d.source, d.index, d.source.links.length))
-        .attr("x2", (d) => calculateX(d.target, d.index, d.source.links.length))
-        .attr("y2", (d) =>
-          calculateY(d.target, d.index, d.source.links.length),
-        );
-
       node.attr("transform", (d) => `translate(${d.x},${d.y})`);
 
-      function calculateX(node, index, totalLinks) {
+      link
+        .attr("x1", (d) => calculateX(d.source, d, getSameLinks(d)))
+        .attr("y1", (d) => calculateY(d.source, d, getSameLinks(d)))
+        .attr("x2", (d) => calculateX(d.target, d, getSameLinks(d)))
+        .attr("y2", (d) => calculateY(d.target, d, getSameLinks(d)));
+
+      // Function to get the links that have the same source and target
+      function getSameLinks(link) {
+        return link.source.links.filter(
+          (l) =>
+            l.source.id === link.source.id && l.target.id === link.target.id,
+        );
+      }
+
+      function calculateX(node, link, sameLinks) {
+        const index = sameLinks.indexOf(link); // Find index within same links
+        const totalLinks = sameLinks.length;
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
           (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
         return node.x + radius * Math.cos(angle + offsetAngle);
       }
 
-      function calculateY(node, index, totalLinks) {
+      function calculateY(node, link, sameLinks) {
+        const index = sameLinks.indexOf(link); // Find index within same links
+        const totalLinks = sameLinks.length;
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
           (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
