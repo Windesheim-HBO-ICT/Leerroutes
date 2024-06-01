@@ -6,6 +6,12 @@ export class LeerrouteWorkspace extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.width = "100%";
     this.height = "100%";
+
+    //Default values
+    this.nodeRadius = 20;
+    this.linkWidth = 3;
+    this.linkOpacity = 0.6;
+
     if (!this.leerrouteItems) this.leerrouteItems = []; // Prevents expected error
     this.createWorkspace();
 
@@ -15,6 +21,27 @@ export class LeerrouteWorkspace extends HTMLElement {
       if (this.groupPositions) this.updateNodePositions(this.groupPositions);
       this.simulation.restart();
     });
+  }
+
+  static get observedAttributes() {
+    return ["node-radius", "link-width", "link-opacity"];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    switch (name) {
+      case "node-radius":
+        this.nodeRadius = parseFloat(newValue);
+        break;
+      case "link-width":
+        this.linkWidth = parseFloat(newValue);
+        break;
+      case "link-opacity":
+        this.linkOpacity = parseFloat(newValue);
+        break;
+      case "node-color":
+        this.nodeColor = JSON.parse(newValue); // Expecting a JSON array for colors
+        break;
+    }
   }
 
   setLeerrouteItems(leerrouteItems) {
@@ -145,7 +172,7 @@ export class LeerrouteWorkspace extends HTMLElement {
   }
 
   updateNodePositions(groupPositions) {
-    const containerWidth = this.container.clientWidth - 40; // Circle width padding
+    const containerWidth = this.container.clientWidth - this.nodeRadius * 2; // Circle width padding
     const containerHeight = this.container.clientHeight;
 
     // Calculate scale factors for x and y positions
@@ -252,11 +279,11 @@ export class LeerrouteWorkspace extends HTMLElement {
     // Links between nodes
     const link = svg
       .append("g")
-      .attr("stroke-opacity", 0.6)
+      .attr("stroke-opacity", this.linkOpacity)
       .selectAll()
       .data(this.leerrouteItems.flatMap((d) => d.links))
       .join("line")
-      .attr("stroke-width", (d) => Math.sqrt(d.value))
+      .attr("stroke-width", this.linkWidth)
       .attr("stroke", (d) => d.colour);
 
     // Node, a LeerrouteItem
@@ -271,7 +298,7 @@ export class LeerrouteWorkspace extends HTMLElement {
     // Append circles for nodes
     node
       .append("circle")
-      .attr("r", 20)
+      .attr("r", this.nodeRadius)
       .attr("fill", (d) => color(d.group));
 
     // Append text for labels
