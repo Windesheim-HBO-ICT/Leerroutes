@@ -40,8 +40,9 @@ Hier is een voorbeeld van een leerrouteitem:
 #### Constraints
 Binnen de constraints kunnen zowel strings als constraint-objecten voorkomen.
 
-- Strings: Dit zijn vereisten die moeten worden voldaan voordat dit leerrouteitem kan worden voltooid.
-- Constraint-objecten: Specifieke voorwaarden tussen twee leerrouteitems. Het `from`-veld geeft aan waar de beperking begint, en het `to`-veld geeft aan waar de beperking eindigt. Bijvoorbeeld, in dit voorbeeld kan de metrolijn niet van 'CAA' naar 'BPM' gaan, maar kan wel elders.
+- **Strings**: Dit zijn vereisten die moeten worden voldaan voordat dit leerrouteitem kan worden voltooid.
+- **Constraint-objecten**: Specifieke voorwaarden tussen twee leerrouteitems. \
+Het `from`-veld geeft aan waar de beperking begint, en het `to`-veld geeft aan waar de beperking eindigt. Bijvoorbeeld, in dit voorbeeld kan de metrolijn niet van 'CAA' naar 'BPM' gaan, maar kan wel elders.
 
 #### Data
 Het data-veld bevat extra informatie zoals een link naar een webpagina die geopend kan worden wanneer op het item wordt geklikt.
