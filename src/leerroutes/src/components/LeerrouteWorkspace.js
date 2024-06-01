@@ -323,7 +323,7 @@ export class LeerrouteWorkspace extends HTMLElement {
 
     // A tick from the simulation
     function ticked() {
-      const radius = 17; // Fixed node radius
+      const radius = this.radius - 3; // Node radius with a tiny offset to prevent lines from leaking out
 
       link
         .attr("x1", (d) => calculateX(d.source, d.index, d.source.links.length))
@@ -338,7 +338,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       function calculateX(node, index, totalLinks) {
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
-          (index - (totalLinks - 1) / 2) * (rhis.linkSpacing / radius);
+          (index - (totalLinks - 1) / 2) * (this.linkSpacing / radius);
         return node.x + radius * Math.cos(angle + offsetAngle);
       }
 
