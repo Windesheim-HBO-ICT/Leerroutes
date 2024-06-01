@@ -324,7 +324,7 @@ export class LeerrouteWorkspace extends HTMLElement {
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
           (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
-        return node.y + radius * Math.sin(angle + offsetAngle);
+        return node.y + radius * Math.sin(angle + offsetAngle + 0.25);
       }
     }
 
