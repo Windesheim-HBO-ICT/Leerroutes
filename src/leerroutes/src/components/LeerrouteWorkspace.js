@@ -11,6 +11,7 @@ export class LeerrouteWorkspace extends HTMLElement {
     this.nodeRadius = 20;
     this.linkWidth = 3;
     this.linkOpacity = 0.6;
+    this.linkSpacing = 2;
 
     if (!this.leerrouteItems) this.leerrouteItems = []; // Prevents expected error
     this.createWorkspace();
@@ -24,7 +25,7 @@ export class LeerrouteWorkspace extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ["node-radius", "link-width", "link-opacity"];
+    return ["node-radius", "link-width", "link-opacity", "link-spacing"];
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -37,6 +38,9 @@ export class LeerrouteWorkspace extends HTMLElement {
         break;
       case "link-opacity":
         this.linkOpacity = parseFloat(newValue);
+        break;
+      case "link-spacing":
+        this.linkSpacing = parseFloat(newValue);
         break;
       case "node-color":
         this.nodeColor = JSON.parse(newValue); // Expecting a JSON array for colors
@@ -320,7 +324,6 @@ export class LeerrouteWorkspace extends HTMLElement {
     // A tick from the simulation
     function ticked() {
       const radius = 17; // Fixed node radius
-      const linkSpacing = 2; // Space between each link
 
       link
         .attr("x1", (d) => calculateX(d.source, d.index, d.source.links.length))
@@ -335,14 +338,14 @@ export class LeerrouteWorkspace extends HTMLElement {
       function calculateX(node, index, totalLinks) {
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
-          (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
+          (index - (totalLinks - 1) / 2) * (rhis.linkSpacing / radius);
         return node.x + radius * Math.cos(angle + offsetAngle);
       }
 
       function calculateY(node, index, totalLinks) {
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
-          (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
+          (index - (totalLinks - 1) / 2) * (this.linkSpacing / radius);
         return node.y + radius * Math.sin(angle + offsetAngle);
       }
     }
