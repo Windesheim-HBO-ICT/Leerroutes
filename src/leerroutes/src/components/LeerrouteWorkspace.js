@@ -284,9 +284,10 @@ export class LeerrouteWorkspace extends HTMLElement {
       .style("font-size", "10px");
 
     // Append callback function
-    node.on("click", function () {
-      const text = d3.select(this).text();
-      alert(text);
+    node.on("click", function (event, d) {
+      if (d.data && d.data.link) {
+        window.open(d.data.link, "_blank");
+      }
     });
 
     // A tick from the simulation
