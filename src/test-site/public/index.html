@@ -14,22 +14,14 @@
     </header>
     <main>
         <!-- Include the Leerroutes workspace element -->
-        <leerroute-workspace id="leerrouteWorkspace" distance=300></leerroute-workspace>
+        <leerroute-workspace id="leerrouteWorkspace"></leerroute-workspace>
     </main>
     <!-- Include the JavaScript file provided by Leerroutes package -->
     <script src="vendor/Leerroutes/dist/bundle.js"></script>
-
+    
     <!-- Add items to the workspace -->
     <script>
         const leerrouteWorkspace = document.getElementById('leerrouteWorkspace');
-
-        //TODO: Make responsive based on window/viewport
-        const groupPositions = {
-            propedeuse: { x: 200, y: 400 },
-            secondRang: { x: 600, y: 250 },
-            thirdRang: { x: 1200, y: 200 },
-            fourthRang: { x: 1600, y: 100 },
-        };
 
         //Group is for colour from d3
         const leerrouteItems = [
@@ -195,7 +187,7 @@
             },
         ];
 
-        leerrouteWorkspace.setLeerrouteItems(leerrouteItems, groupPositions);
+        leerrouteWorkspace.setLeerrouteItems(leerrouteItems);
     </script>
 </body>
 
