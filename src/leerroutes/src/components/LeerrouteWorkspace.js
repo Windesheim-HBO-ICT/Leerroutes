@@ -25,6 +25,7 @@ export class LeerrouteWorkspace extends HTMLElement {
     });
   }
 
+  // Attributes to customice workspace
   static get observedAttributes() {
     return ["node-radius", "link-width", "link-opacity", "link-spacing"];
   }
@@ -46,6 +47,7 @@ export class LeerrouteWorkspace extends HTMLElement {
     }
   }
 
+  // Set the items for the workspace. See test-site for how it works
   setLeerrouteItems(leerrouteItems) {
     console.log("Received leerrouteItems:", leerrouteItems);
     this.leerrouteItems = leerrouteItems;
