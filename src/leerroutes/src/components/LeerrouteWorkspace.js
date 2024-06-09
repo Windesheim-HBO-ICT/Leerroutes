@@ -251,6 +251,7 @@ export class LeerrouteWorkspace extends HTMLElement {
   }
 
   renderWorkspace() {
+    const self = this; //Scope issues in tick
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     // Get the width and height of the container so we can calculate center
@@ -321,8 +322,8 @@ export class LeerrouteWorkspace extends HTMLElement {
 
     // A tick from the simulation
     function ticked() {
-      const radius = this.radius - 3; // Node radius with a tiny offset to prevent lines from leaking out
-      const linkSpacing = this.linkSpacing;
+      const radius = self.nodeRadius - 3; // Node radius with a tiny offset to prevent lines from leaking out of the circle
+      const linkSpacing = self.linkSpacing;
       node.attr("transform", (d) => `translate(${d.x},${d.y})`);
 
       link
