@@ -2,7 +2,7 @@
 
 ![GitHub Licentie](https://img.shields.io/github/license/Windesheim-HBO-ICT/Leerroutes)
 ![Project Status Badge](https://img.shields.io/badge/status-in%20progress-brightgreen)
-![Versie Status Badge](https://img.shields.io/badge/versie-alpha-blue)
+![Versie Status Badge](https://img.shields.io/badge/versie-beta-orange)
 
 NPM-packages voor het visueel weergeven van leerroutes binnen HBO-ICT.
 
@@ -15,19 +15,29 @@ NPM-packages voor het visueel weergeven van leerroutes binnen HBO-ICT.
 - [Licentie](#licentie)
 
 ## Algemene informatie
-Deze package wordt gebruikt binnen het curriculumproject om alle leerroutes van de opleiding HBO-ICT van Windesheim visueel weer te geven op een gemakkelijke manier voor studenten.
+Deze package wordt gebruikt binnen het curriculumproject om alle leerroutes van de opleiding HBO-ICT van Windesheim visueel weer te geven op een gemakkelijke manier voor studenten. Hierdoor zullen studenten weten hoe de HBO-ICT opleiding in elkaar zit en direct kunnen informatie vinden over elk semester.
 
 Om Leerroutes op zo veel mogelijke plaatsen beschikbaar te maken zal het ontwikkeld worden met Javascript webcomponent en dus geen framework bevatten. 
 
 ### Functies
-Het zal op termijn mogelijk zijn om de leerroutes te bekijken met behulp van metrolijnen zoals in deze afbeelding met:
-
+Het concept van deze project is deze afbeelding:
 ![Leerroutes concept](https://github.com/Labhatorian/Leerroutes/assets/16213031/3e5c08df-3096-4783-ab67-3a85d372f25f)
 
-Hiervoor zal [d3-force](https://d3js.org/d3-force#d3-force) gebruikt worden van [d3](https://d3js.org/) om dit te realiseren.
+Er is vervolgens met [d3-force](https://d3js.org/d3-force#d3-force) van [d3](https://d3js.org/) gebruikt om dit te realiseren.
+
+In het huidige versie is het volgende mogelijk:
+- Responsive weergave van Leerroutes op basis van een LeerrouteItem
+- Metrolijnen tussen de leerroutes om alle paden van HBO-ICT te laten zien
+- Klikken op een item linkt naar de module
+- Customability van de items
+
+### Gebruiken
+Om de Leerroutes package te gebruiken moet u bewust zijn van twee dingen:
+- [**Gebruiken:** hoe u de Leerroutes package en de Leerroutesworkspace component moet gebruiken.](./docs/usage.md)
+- [**Leerrouteitem:** waaruit de Leerrouteworkspace uit bestaat.](./docs/leerrouteitem.md)
 
 ## Installatie
-Deze npm-package kan worden geïnstalleerd via (zodra mogelijk, staat nog niet op `npm`):
+Deze npm-package kan worden geïnstalleerd via:
 
 ```bash
 npm install leerroutes
@@ -38,11 +48,13 @@ yarn add leerroutes
 ```
 
 ## Deployen
-Zodra de package gereed is om te deployen, zal er een workflow worden uitgevoerd wanneer er iets wordt gepusht naar main. Deze workflow zal de code builden en dan pushen naar npm
+Na het pushen naar main wordt er een [workflow](https://github.com/Windesheim-HBO-ICT/Leerroutes/blob/main/.github/workflows/publish.yml) uitgevoerd. Deze workflow build de Leerroutes package met webpack om het vervolgens met een `NPM_TOKEN` het te publishen naar npm.
 
 ## Ontwikkelen
 Als je wilt bijdragen aan de Leerroutes-package, zijn er een paar belangrijke dingen om te weten. \
 Allereerst wordt er gebruik gemaakt van [Yarn](https://yarnpkg.com/) en Yarn  Workspaces om de package in `./src/leerroutes` af te scheiden van de testsite in `./src/test-site`.
+
+Ook wordt er gebruik gemaakt van [Eslint](https://eslint.org/) om kwaliteit af te dwingen. Wij raden een extensie in je IDE te installeren zoals [Eslint van Microsoft](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
 Om te gaan ontwikkelen voor Leerroutes zijn zal je deze commando's moeten uitvoeren:
 
@@ -64,6 +76,9 @@ yarn workspace leerroutes link
 ```bash
 yarn workspace test-site link `leerroutes`
 ```
+
+--- 
+
 
 ### Bijdragen
 Om bij te dragen aan dit project kun je een fork maken en vervolgens pull-requests maken naar deze repository.
