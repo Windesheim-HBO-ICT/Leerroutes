@@ -7,6 +7,13 @@ export class LeerrouteWorkspace extends HTMLElement {
     this.attachShadow({ mode: "open" });
     this.width = "100%";
     this.height = "100%";
+
+    //Default values
+    this.nodeRadius = 20;
+    this.linkWidth = 3;
+    this.linkOpacity = 0.6;
+    this.linkSpacing = 2;
+
     if (!this.leerrouteItems) this.leerrouteItems = []; // Prevents expected error
     this.createWorkspace();
 
@@ -16,6 +23,27 @@ export class LeerrouteWorkspace extends HTMLElement {
       if (this.groupPositions) this.updateNodePositions(this.groupPositions);
       this.simulation.restart();
     });
+  }
+
+  static get observedAttributes() {
+    return ["node-radius", "link-width", "link-opacity", "link-spacing"];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    switch (name) {
+      case "node-radius":
+        this.nodeRadius = parseFloat(newValue);
+        break;
+      case "link-width":
+        this.linkWidth = parseFloat(newValue);
+        break;
+      case "link-opacity":
+        this.linkOpacity = parseFloat(newValue);
+        break;
+      case "link-spacing":
+        this.linkSpacing = parseFloat(newValue);
+        break;
+    }
   }
 
   setLeerrouteItems(leerrouteItems) {
@@ -251,11 +279,11 @@ export class LeerrouteWorkspace extends HTMLElement {
     // Links between nodes, the metrolines
     const link = svg
       .append("g")
-      .attr("stroke-opacity", 0.6)
+      .attr("stroke-opacity", this.linkOpacity)
       .selectAll()
       .data(this.leerrouteItems.flatMap((d) => d.links))
       .join("line")
-      .attr("stroke-width", (d) => Math.sqrt(d.value))
+      .attr("stroke-width", this.linkWidth)
       .attr("stroke", (d) => d.colour);
 
     // Node, a LeerrouteItem
@@ -270,7 +298,7 @@ export class LeerrouteWorkspace extends HTMLElement {
     // Append circles for nodes. This is so we can add labels for the node id, the name of the leerrouteitem
     node
       .append("circle")
-      .attr("r", 20)
+      .attr("r", this.nodeRadius)
       .attr("fill", (d) => color(d.group));
 
     // Append text as lable to the circle of the node
@@ -283,15 +311,15 @@ export class LeerrouteWorkspace extends HTMLElement {
       .style("font-size", "10px");
 
     // Append callback function
-    node.on("click", function () {
-      const text = d3.select(this).text();
-      alert(text);
+    node.on("click", function (event, d) {
+      if (d.data && d.data.link) {
+        window.open(d.data.link, "_blank");
+      }
     });
 
     // A tick from the simulation
     function ticked() {
-      const radius = 17; // Fixed node radius
-      const linkSpacing = 2; // Space between each link
+      const radius = this.radius - 3; // Node radius with a tiny offset to prevent lines from leaking out
       node.attr("transform", (d) => `translate(${d.x},${d.y})`);
 
       link
@@ -314,7 +342,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       function calculateX(node, index, totalLinks) {
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
-          (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
+          (index - (totalLinks - 1) / 2) * (this.linkSpacing / radius);
         return node.x + radius * Math.cos(angle + offsetAngle);
       }
 
@@ -323,7 +351,7 @@ export class LeerrouteWorkspace extends HTMLElement {
         const totalLinks = sameLinks.length;
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
-          (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
+          (index - (totalLinks - 1) / 2) * (this.linkSpacing / radius);
         return node.y + radius * Math.sin(angle + offsetAngle + 0.25);
       }
     }
