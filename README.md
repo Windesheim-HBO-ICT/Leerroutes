@@ -1,10 +1,9 @@
 # Leerroutes
-
 ![GitHub Licentie](https://img.shields.io/github/license/Windesheim-HBO-ICT/Leerroutes)
 ![Project Status Badge](https://img.shields.io/badge/status-in%20progress-brightgreen)
 ![Versie Status Badge](https://img.shields.io/badge/versie-beta-orange)
 
-NPM-packages voor het visueel weergeven van leerroutes binnen HBO-ICT.
+NPM-package voor het visueel weergeven van leerroutes binnen HBO-ICT.
 
 ## Inhoudsopgave
 - [Algemene informatie](#algemene-informatie)
@@ -79,7 +78,6 @@ yarn workspace test-site link `leerroutes`
 
 --- 
 
-
 ### Bijdragen
 Om bij te dragen aan dit project kun je een fork maken en vervolgens pull-requests maken naar deze repository.
 
@@ -91,4 +89,6 @@ Voor informatie, problemen en ideeën wordt verwezen naar het volgende:
 Zorg er ook voor dat je comments achterlaat in je code als documentatie voor toekomstige studenten en ontwikkelaars die bijdragen aan het project.
 
 ## Licentie
-Dit project heeft momenteel nog geen licentie.
+Deze software is beschikbaar onder de [GNU General Public License v3.0](./LICENSE). \
+Copyright © 2024 [Hogeschool Windesheim HBO-ICT](https://www.windesheim.nl/opleidingen/voltijd/bachelor/hbo-ict-zwolle)
+
