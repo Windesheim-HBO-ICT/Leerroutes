@@ -91,4 +91,3 @@ Zorg er ook voor dat je comments achterlaat in je code als documentatie voor toe
 ## Licentie
 Deze software is beschikbaar onder de [GNU General Public License v3.0](./LICENSE). \
 Copyright © 2024 [Hogeschool Windesheim HBO-ICT](https://www.windesheim.nl/opleidingen/voltijd/bachelor/hbo-ict-zwolle)
-
