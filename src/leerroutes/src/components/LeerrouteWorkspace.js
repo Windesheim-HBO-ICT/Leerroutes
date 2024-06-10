@@ -1,28 +1,59 @@
 import * as d3 from "d3";
 
+// Note that links here are our metrolines.
 export class LeerrouteWorkspace extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
     this.width = "100%";
     this.height = "100%";
+
+    //Default values
+    this.nodeRadius = 20;
+    this.linkWidth = 3;
+    this.linkOpacity = 0.6;
+    this.linkSpacing = 2;
+
     if (!this.leerrouteItems) this.leerrouteItems = []; // Prevents expected error
     this.createWorkspace();
 
-    // Add event listener for window resize
+    // Add event listener for window resize for responsive
     window.addEventListener("resize", () => {
-      this.simulation.stop();
+      this.simulation.stop(); // stop and restart simulation to prevent flickering
       if (this.groupPositions) this.updateNodePositions(this.groupPositions);
       this.simulation.restart();
     });
   }
 
+  // Attributes to customice workspace
+  static get observedAttributes() {
+    return ["node-radius", "link-width", "link-opacity", "link-spacing"];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    switch (name) {
+      case "node-radius":
+        this.nodeRadius = parseFloat(newValue);
+        break;
+      case "link-width":
+        this.linkWidth = parseFloat(newValue);
+        break;
+      case "link-opacity":
+        this.linkOpacity = parseFloat(newValue);
+        break;
+      case "link-spacing":
+        this.linkSpacing = parseFloat(newValue);
+        break;
+    }
+  }
+
+  // Set the items for the workspace. See test-site for how it works
   setLeerrouteItems(leerrouteItems) {
     console.log("Received leerrouteItems:", leerrouteItems);
     this.leerrouteItems = leerrouteItems;
     this.groupPositions = {};
 
-    // Add a parents array to each item for metrolines
+    // Add a parents array to each item for metrolines to prevent error
     this.leerrouteItems.forEach((item) => {
       item.children.forEach((childID) => {
         const childItem = this.leerrouteItems.find(
@@ -55,6 +86,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       }
     });
 
+    //Recursive function to create the metrolines/links starting from items with no children.
     const createRecursiveLinks = function (
       item,
       scopedLeerrouteItems,
@@ -116,6 +148,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       });
     };
 
+    //Colours for metrolines
     const predefinedColors = [
       "green",
       "red",
@@ -125,6 +158,7 @@ export class LeerrouteWorkspace extends HTMLElement {
       "gray",
       "gold",
     ];
+
     let colorIndex = 0;
     noChildrenItems.forEach((item) => {
       createRecursiveLinks(
@@ -145,10 +179,10 @@ export class LeerrouteWorkspace extends HTMLElement {
   }
 
   updateNodePositions(groupPositions) {
-    const containerWidth = this.container.clientWidth - 40; // Circle width padding
+    const containerWidth = this.container.clientWidth - 40; // Circle width padding, prevents items being placed outside workspace
     const containerHeight = this.container.clientHeight;
 
-    // Calculate scale factors for x and y positions
+    // Calculate scale factors for x and y positions for responssive
     const xScale = d3
       .scaleLinear()
       .domain([0, Object.keys(groupPositions).length - 1])
@@ -164,10 +198,10 @@ export class LeerrouteWorkspace extends HTMLElement {
         (item) => item.groupPosition === groupPosition,
       ).length;
       const verticalSpacing = containerHeight / itemCount;
-      // Adjust vertical spacing based on the available space
       return verticalSpacing;
     };
 
+    //Calculaton for placement on workspace, built to be responsive as a group
     let index = 0;
     Object.keys(groupPositions).forEach((key) => {
       const groupPosition = groupPositions[key];
@@ -186,11 +220,11 @@ export class LeerrouteWorkspace extends HTMLElement {
       index++;
     });
 
+    //Now calculate each items placement, responsive of course
     this.leerrouteItems.forEach((item) => {
       const groupPosition = groupPositions[item.groupPosition];
       if (!groupPosition.index) groupPosition.index = 0;
       if (groupPosition) {
-        // Scale and set the fixed x position
         item.fx = groupPosition.x;
         // Calculate and set the dynamic y position based on group index and vertical spacing
         item.fy =
@@ -202,32 +236,29 @@ export class LeerrouteWorkspace extends HTMLElement {
   }
 
   createWorkspace() {
-    // Create a container div for the simulation
+    // Create a container div for the simulation for some calculations for responsiveness
     const container = document.createElement("div");
     container.style.width = this.width;
     container.style.height = this.height;
     this.shadowRoot.appendChild(container);
-    this.container = container; // Store the container reference
-
-    // Render the workspace content
+    this.container = container;
     this.renderWorkspace();
   }
 
   updateWorkspace() {
-    // Clear the existing content
     this.container.innerHTML = "";
-    // Render the workspace content
     this.renderWorkspace();
   }
 
   renderWorkspace() {
+    const self = this; //Scope issues in tick
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     // Get the width and height of the container so we can calculate center
     const containerWidth = this.container.clientWidth;
     const containerHeight = this.container.clientHeight;
 
-    // Simulation is essentially the workspace where all the nodes and links will appear
+    // Simulation is the workspace where all the nodes and links will appear
     const simulation = d3
       .forceSimulation(this.leerrouteItems)
       .force(
@@ -239,7 +270,6 @@ export class LeerrouteWorkspace extends HTMLElement {
       .force("charge", d3.forceManyBody())
       .force("center", d3.forceCenter(containerWidth / 2, containerHeight / 2))
       .on("tick", ticked);
-
     this.simulation = simulation;
 
     // Append SVG to the container
@@ -249,14 +279,14 @@ export class LeerrouteWorkspace extends HTMLElement {
       .attr("width", this.width)
       .attr("height", this.height);
 
-    // Links between nodes
+    // Links between nodes, the metrolines
     const link = svg
       .append("g")
-      .attr("stroke-opacity", 0.6)
+      .attr("stroke-opacity", this.linkOpacity)
       .selectAll()
       .data(this.leerrouteItems.flatMap((d) => d.links))
       .join("line")
-      .attr("stroke-width", (d) => Math.sqrt(d.value))
+      .attr("stroke-width", this.linkWidth)
       .attr("stroke", (d) => d.colour);
 
     // Node, a LeerrouteItem
@@ -268,13 +298,13 @@ export class LeerrouteWorkspace extends HTMLElement {
       .data(this.leerrouteItems)
       .join("g");
 
-    // Append circles for nodes
+    // Append circles for nodes. This is so we can add labels for the node id, the name of the leerrouteitem
     node
       .append("circle")
-      .attr("r", 20)
+      .attr("r", this.nodeRadius)
       .attr("fill", (d) => color(d.group));
 
-    // Append text for labels
+    // Append text as lable to the circle of the node
     node
       .append("text")
       .text((d) => d.id)
@@ -284,38 +314,51 @@ export class LeerrouteWorkspace extends HTMLElement {
       .style("font-size", "10px");
 
     // Append callback function
-    node.on("click", function () {
-      const text = d3.select(this).text();
-      alert(text);
+    node.on("click", function (event, d) {
+      if (d.data && d.data.link) {
+        window.open(d.data.link, "_blank");
+      }
     });
 
     // A tick from the simulation
     function ticked() {
-      const radius = 17; // Fixed node radius
-      const linkSpacing = 2; // Space between each link
-
-      link
-        .attr("x1", (d) => calculateX(d.source, d.index, d.source.links.length))
-        .attr("y1", (d) => calculateY(d.source, d.index, d.source.links.length))
-        .attr("x2", (d) => calculateX(d.target, d.index, d.source.links.length))
-        .attr("y2", (d) =>
-          calculateY(d.target, d.index, d.source.links.length),
-        );
-
+      const radius = self.nodeRadius - 3; // Node radius with a tiny offset to prevent lines from leaking out of the circle
+      const linkSpacing = self.linkSpacing;
       node.attr("transform", (d) => `translate(${d.x},${d.y})`);
 
-      function calculateX(node, index, totalLinks) {
+      link
+        .attr("x1", (d) => calculateX(d.source, d, getSameLinks(d)))
+        .attr("y1", (d) => calculateY(d.source, d, getSameLinks(d)))
+        .attr("x2", (d) => calculateX(d.target, d, getSameLinks(d)))
+        .attr("y2", (d) => calculateY(d.target, d, getSameLinks(d)));
+
+      // Function to get the links that have the same source and target
+      function getSameLinks(link) {
+        return link.source.links.filter(
+          (l) =>
+            l.source.id === link.source.id && l.target.id === link.target.id,
+        );
+      }
+
+      //Calculation for metroline placement. Complicated with help from GPT
+      //Basically we try to space the metrolines out so we can actually see individual lines.
+      //And to do so in a way without it looking weird like too much space for just two lines.
+      function calculateX(node, link, sameLinks) {
+        const index = sameLinks.indexOf(link); // Find index within same links
+        const totalLinks = sameLinks.length;
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
           (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
         return node.x + radius * Math.cos(angle + offsetAngle);
       }
 
-      function calculateY(node, index, totalLinks) {
+      function calculateY(node, link, sameLinks) {
+        const index = sameLinks.indexOf(link); // Find index within same links
+        const totalLinks = sameLinks.length;
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
           (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
-        return node.y + radius * Math.sin(angle + offsetAngle);
+        return node.y + radius * Math.sin(angle + offsetAngle + 0.25);
       }
     }
 
