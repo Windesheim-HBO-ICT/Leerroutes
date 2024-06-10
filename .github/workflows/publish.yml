@@ -1,4 +1,6 @@
-name: Publish leerroutes to npm
+
+name: Publish leerroutes to GitHub Releases
+
 
 on:
   push:
@@ -6,26 +8,42 @@ on:
       - main
 
 jobs:
-  build-and-publish:
+  build-and-release:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Node.js
+    - name: Setup Node
       uses: actions/setup-node@v3
       with:
-        node-version: '16'
-        cache: 'yarn'
-
+        node-version: 18.x
+        cache: yarn
+        
     - name: Install dependencies
       run: yarn install
 
     - name: Build leerroutes
       run: yarn workspace leerroutes run release:build
 
-    - name: Publish to npm
+    - name: Create GitHub release
+      id: create_release
+      uses: actions/create-release@v1
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      run: yarn workspace leerroutes run publish --access public
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.sha }}
+        release_name: Release ${{ github.sha }}
+        draft: false
+        prerelease: false
+
+    - name: Upload release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/bundle.js
+        asset_name: bundle.js
+        asset_content_type: application/javascript
