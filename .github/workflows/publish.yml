@@ -1,4 +1,6 @@
+
 name: Publish leerroutes to GitHub Releases
+
 
 on:
   push:
@@ -18,7 +20,7 @@ jobs:
       with:
         node-version: 18.x
         cache: yarn
-
+        
     - name: Install dependencies
       run: yarn install
 

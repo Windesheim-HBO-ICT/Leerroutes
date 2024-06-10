@@ -251,6 +251,7 @@ export class LeerrouteWorkspace extends HTMLElement {
   }
 
   renderWorkspace() {
+    const self = this; //Scope issues in tick
     const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     // Get the width and height of the container so we can calculate center
@@ -321,7 +322,8 @@ export class LeerrouteWorkspace extends HTMLElement {
 
     // A tick from the simulation
     function ticked() {
-      const radius = this.radius - 3; // Node radius with a tiny offset to prevent lines from leaking out
+      const radius = self.nodeRadius - 3; // Node radius with a tiny offset to prevent lines from leaking out of the circle
+      const linkSpacing = self.linkSpacing;
       node.attr("transform", (d) => `translate(${d.x},${d.y})`);
 
       link
@@ -341,10 +343,12 @@ export class LeerrouteWorkspace extends HTMLElement {
       //Calculation for metroline placement. Complicated with help from GPT
       //Basically we try to space the metrolines out so we can actually see individual lines.
       //And to do so in a way without it looking weird like too much space for just two lines.
-      function calculateX(node, index, totalLinks) {
+      function calculateX(node, link, sameLinks) {
+        const index = sameLinks.indexOf(link); // Find index within same links
+        const totalLinks = sameLinks.length;
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
-          (index - (totalLinks - 1) / 2) * (this.linkSpacing / radius);
+          (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
         return node.x + radius * Math.cos(angle + offsetAngle);
       }
 
@@ -353,7 +357,7 @@ export class LeerrouteWorkspace extends HTMLElement {
         const totalLinks = sameLinks.length;
         const angle = 2 * Math.PI * (index / totalLinks); // Spread links evenly in a circular manner
         const offsetAngle =
-          (index - (totalLinks - 1) / 2) * (this.linkSpacing / radius);
+          (index - (totalLinks - 1) / 2) * (linkSpacing / radius);
         return node.y + radius * Math.sin(angle + offsetAngle + 0.25);
       }
     }
